@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>UX & Accessibility Audit Checklist — B2B Design Team</title>
+<style>
+:root{
+  --brand:#0F3278;--brand-mid:#2D4A9A;--brand-lite:#4A7BF7;
+  --accent:#F05A28;--accent-lite:#FFF0EB;
+  --teal:#0B7B69;--teal-lite:#E6F7F4;
+  --amber:#B45309;--amber-lite:#FFFBEB;
+  --purple:#5B21B6;--purple-lite:#EDE9FE;
+  --rose:#BE123C;--rose-lite:#FFF1F2;
+  --grey-5:#111827;--grey-4:#1D1D1D;--grey-3:#374151;--grey-2:#6B7280;--grey-1:#E5E7EB;--grey-0:#F9FAFB;
+  --white:#fff;--radius:10px;
+  --shadow:0 2px 12px rgba(27,43,94,.08);
+  --sticky-h:48px;--filter-h:60px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--grey-0);color:var(--grey-3);min-height:100vh;font-size:14px;display:flex;flex-direction:column}
+
+/* ══ HERO ══ */
+.hero{background:var(--brand);padding:30px 28px 24px;color:#fff;position:relative;overflow:hidden;flex-shrink:0}
+.hero::before{content:'';position:absolute;top:-80px;right:-60px;width:320px;height:320px;border-radius:50%;background:rgba(74,123,247,.15);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-50px;left:30%;width:200px;height:200px;border-radius:50%;background:rgba(240,90,40,.08);pointer-events:none}
+.hero-inner{max-width:1200px;margin:0 auto;position:relative;z-index:1}
+.hero-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:16px}
+.logo-wrap{display:flex;align-items:center;gap:10px}
+.logo-box{width:44px;height:44px;background:linear-gradient(135deg,var(--brand-mid),var(--brand-lite));border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;color:#fff;letter-spacing:-.5px;border:2px solid rgba(255,255,255,.2);box-shadow:0 2px 10px rgba(0,0,0,.2)}
+.logo-text .logo-name{font-size:15px;font-weight:900;color:#fff;line-height:1.2}
+.logo-text .logo-tag{font-size:10px;opacity:.6;letter-spacing:.5px}
+.hero-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:99px;padding:4px 12px;font-size:10.5px;font-weight:700;letter-spacing:.5px;color:rgba(255,255,255,.85);margin-bottom:10px}
+.hero h1{font-size:clamp(17px,3vw,18px);font-weight:900;line-height:1;margin-bottom:6px}
+.hero-sub{font-size:12px;opacity:.72;line-height:16px;margin-bottom:18px;font-weight: 400;}
+.hero-pills{display:none;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.hero-pill{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:99px;padding:3px 11px;font-size:10px;font-weight:700;letter-spacing:.3px}
+.hero-prog{background:rgba(255,255,255,.1);border-radius:var(--radius);padding:10px 14px}
+.prog-row{display:flex;align-items:center;gap:14px}
+.prog-bg{flex:1;background:rgba(255,255,255,.18);border-radius:99px;height:8px;overflow:hidden}
+.prog-bar{height:8px;border-radius:99px;background:var(--brand-lite);width:0%;transition:width .4s ease}
+.prog-bar.complete{background:#F59E0B}
+.prog-text{font-weight:900;font-size:14px;white-space:nowrap}
+.prog-sub{font-size:11px;opacity:.6;margin-top:5px}
+
+/* ══ STICKY ══ */
+.sticky-head{position:sticky;top:0;z-index:300;background:var(--brand);padding:9px 24px;display:none;align-items:center;gap:14px;box-shadow:0 3px 16px rgba(27,43,94,.4)}
+.sticky-head.visible{display:flex}
+.s-logo{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.s-logo-box{height:30px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:11px;color:#fff;}
+.s-logo-name{color:#fff;font-size:12px;font-weight:800;opacity:.9}
+.s-div{width:1px;height:20px;background:rgba(255,255,255,.18);flex-shrink:0}
+.s-title{color:#fff;font-size:13px;font-weight:800;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.s-pb-bg{width:140px;flex-shrink:0;background:rgba(255,255,255,.2);border-radius:99px;height:5px;overflow:hidden}
+.s-pb{height:5px;border-radius:99px;background:var(--brand-lite);width:0%;transition:width .4s}
+.s-pb.complete{background:#F59E0B}
+.s-pt{color:#fff;font-size:11px;font-weight:800;white-space:nowrap;flex-shrink:0}
+
+/* ══ FILTER BAR ══ */
+.filter-bar{background:#FFFFFF;border-bottom:2px solid var(--grey-1);position:sticky;top:var(--sticky-h)!important;z-index:200;box-shadow:0px 20px 40px rgba(27,43,94,.1)}
+.filter-inner{max-width:1200px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:8px;flex-wrap:nowrap;height:var(--filter-h)}
+.fg{display:flex;gap:4px;align-items:center;flex-shrink:0}
+.fsep{width:1px;height:22px;background:var(--grey-1);flex-shrink:0;margin:0 2px}
+.chip{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--grey-1);cursor:pointer;font-size:15px;background:#fff;color:var(--grey-3);transition:all .18s;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative}
+.chip:hover{border-color:var(--brand-mid);background:#EEF2FF;transform:scale(1.08)}
+.chip.active{background:var(--brand);border-color:var(--brand);box-shadow:0 2px 8px rgba(27,43,94,.3);transform:scale(1.08)}
+.chip.act-ux{background:var(--purple);border-color:var(--purple);transform:scale(1.08)}
+.chip.act-wcag{background:var(--teal);border-color:var(--teal);transform:scale(1.08)}
+.chip.act-done{background:var(--accent);border-color:var(--accent);transform:scale(1.08)}
+.chip-all{font-size:12px;font-weight:900;color:var(--grey-3)}
+.chip.active .chip-all,.chip.act-ux .chip-all,.chip.act-wcag .chip-all,.chip.act-done .chip-all{color:#fff}
+.chip-tip{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--grey-5);color:#fff;font-size:10px;font-weight:600;padding:4px 9px;border-radius:5px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .15s;z-index:600}
+.chip-tip::before{content:'';position:absolute;top:-4px;left:50%;width:7px;height:7px;background:var(--grey-5);transform:translateX(-50%) rotate(45deg);border-radius:1px}
+.chip:hover .chip-tip{opacity:1}
+.search-wrap{flex:1;position:relative;min-width:120px;margin-left:4px}
+.search-wrap input{width:100%;border:1px solid var(--grey-1);border-radius:99px;padding:8px 34px 8px 14px;font-size:12px;color:var(--grey-3);outline:none;transition:border .2s,box-shadow .2s;background:var(--grey-1);height:38px}
+.search-wrap input:focus{border-color:var(--brand-mid);box-shadow:0 0 0 3px rgba(45,74,154,.09);background:#fff}
+.sc{position:absolute;right:11px;top:50%;transform:translateY(-50%);cursor:pointer;opacity:.4;font-size:11px;background:none;border:none;color:var(--grey-3);display:none;padding:2px}
+.sc:hover{opacity:.8}
+
+/* ══ ACTION BAR ══ */
+.action-bar{background:#fff;border-bottom:1px solid var(--grey-1)}
+.action-inner{max-width:1200px;margin:0 auto;padding:8px 20px;display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.stat{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--grey-3);background:var(--grey-0);border:1px solid var(--grey-1);border-radius:99px;padding:4px 11px;white-space:nowrap}
+.stat-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.action-btns{margin-left:auto;display:flex;gap:6px;align-items:center}
+.act-btn{display:flex;align-items:center;gap:5px;padding:6px 13px;border-radius:99px;border:1.5px solid var(--grey-1);font-size:12px;font-weight:700;cursor:pointer;background:#fff;color:var(--grey-3);transition:all .18s;white-space:nowrap}
+.act-btn:hover{border-color:var(--brand-mid);color:var(--brand-mid);background:#EEF2FF}
+.reset-btn{display:flex;align-items:center;gap:6px;padding:6px 15px;border-radius:99px;border:2px solid var(--accent);font-size:12px;font-weight:800;cursor:pointer;background:#fff;color:var(--accent);transition:all .2s}
+.reset-btn:hover{background:var(--accent);color:#fff;box-shadow:0 3px 12px rgba(240,90,40,.3)}
+.reset-btn:hover .ri{transform:rotate(-360deg)}
+.ri{transition:transform .45s;display:inline-flex}
+
+/* ══ EXPORT BTN ══ */
+.export-btn{display:flex;align-items:center;gap:5px;padding:6px 13px;border-radius:99px;border:1.5px solid var(--teal);font-size:12px;font-weight:700;cursor:pointer;background:#fff;color:var(--teal);transition:all .18s}
+.export-btn:hover{background:var(--teal);color:#fff}
+
+/* ══ MAIN ══ */
+.page-content{flex:1}
+.main{max-width:1200px;margin:0 auto;padding:20px 20px 48px}
+
+/* ══ SECTION ══ */
+.section{margin-bottom:24px;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.sec-header{display:flex;align-items:center;gap:12px;padding:14px 20px 14px 10px;border-left:5px solid transparent;cursor:pointer;user-select:none;transition:filter .15s}
+.sec-header:hover{filter:brightness(.97)}
+.sec-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.sec-icon{font-size:20px;flex-shrink:0}
+.sec-info{flex:1;min-width:0}
+.sec-title{font-size:16px;font-weight:800;letter-spacing:.2px}
+.sec-desc{font-size:11px;opacity:.65;margin-top:2px}
+.sec-right{display:flex;align-items:center;gap:9px;flex-shrink:0}
+.sec-count{font-size:11px;font-weight:800;padding:3px 11px;border-radius:99px;white-space:nowrap}
+.sec-chev{font-size:12px;opacity:.65;transition:transform .25s;display:inline-block}
+.section.sec-open .sec-chev{transform:rotate(180deg)}
+.sec-body{display:none}
+.section.sec-open .sec-body{display:block}
+
+/* ══ GROUP ══ */
+.group-card{background:#fff;border-top:1px solid var(--grey-1);overflow:hidden}
+.group-head{width:100%;background:none;border:none;border-bottom:1px solid #F3F4F6;padding:0;cursor:pointer;text-align:left}
+.group-head-inner{display:flex;align-items:center;gap:10px;padding:11px 20px;transition:background .15s}
+.group-head:hover .group-head-inner{background:#FAFBFF}
+.g-num{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;flex-shrink:0;color:#fff}
+.gtitle{font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.8px}
+.gsub{font-size:10.5px;color:var(--grey-2);margin-top:1px}
+.gmeta{display:flex;align-items:center;gap:6px;margin-left:auto;flex-shrink:0}
+.gcount{font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:99px;background:var(--grey-0);color:var(--grey-2);border:1px solid var(--grey-1)}
+.gcats{display:flex;gap:3px}
+.gcat{font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:99px}
+.gcat-wcag{background:#D1FAE5;color:#065F46}
+.gcat-ux{background:#EDE9FE;color:#5B21B6}
+.gcat-h{background:#FEF3C7;color:#92400E}
+.gchev{font-size:11px;color:var(--grey-2);transition:transform .22s;display:inline-block;margin-left:3px}
+.group-card.open .gchev{transform:rotate(180deg)}
+.group-body{display:none}
+.group-card.open .group-body{display:block}
+
+/* ══ ITEM ══ */
+.item{display:flex;align-items:flex-start;gap:11px;padding:14px 20px;border-top:1px solid #F3F4F6;cursor:pointer;transition:background .12s;user-select:none}
+.item:hover{background:#F5F7FF}
+.item.checked{background:#F0FDF4}
+.item.checked:hover{background:#DCFCE7}
+.item.hidden{display:none!important}
+.cb{width:20px;height:20px;min-width:20px;border-radius:5px;border:2px solid var(--grey-1);background:#fff;display:flex;align-items:center;justify-content:center;transition:all .18s;margin-top:2px;flex-shrink:0}
+.item:hover .cb{border-color:var(--brand-mid)}
+.item.checked .cb{background:#16A34A;border-color:#16A34A}
+.ibody{flex:1;min-width:0}
+.irow1{display:flex;align-items:baseline;gap:8px;margin-bottom:5px}
+.itext{font-size:13px;line-height:1.6;color:var(--grey-4)}
+.item.checked .itext{color:var(--grey-2);text-decoration:line-through}
+.irow2{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.iid{font-size:9px;padding:2px 8px;border-radius:4px;background:var(--grey-1);color:var(--grey-4);letter-spacing:.4px;white-space:nowrap;font-weight:700;flex-shrink:0;font-family:monospace}
+.tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;white-space:nowrap;line-height:1.6}
+.tA{background:#DBEAFE;color:#1D4ED8}
+.tAA{background:#D1FAE5;color:#065F46}
+.tAAA{background:#FEF3C7;color:#92400E}
+.tUX{background:#EDE9FE;color:#5B21B6}
+.tH{background:#FEF3C7;color:#92400E}
+.tWCAG{background:#D1FAE5;color:#065F46}
+.tSev1{background:#FEE2E2;color:#991B1B}
+.tSev2{background:#FFEDD5;color:#9A3412}
+.tSev3{background:#FEF9C3;color:#854D0E}
+.info-wrap{position:relative;flex-shrink:0;margin-top:2px}
+.info-btn{width:20px;height:20px;border-radius:50%;background:#EEF2FF;border:1.5px solid #C7D2FE;color:var(--brand);font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:default;transition:background .15s;font-family:'Segoe UI',sans-serif}
+.info-btn:hover{background:var(--brand-mid);color:#fff;border-color:var(--brand-mid)}
+.tooltip{position:absolute;right:0;top:26px;width:300px;background:var(--grey-5);color:#fff;font-size:11px;line-height:1.7;padding:11px 14px;border-radius:9px;z-index:400;pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .18s,transform .18s;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.tooltip::before{content:'';position:absolute;top:-5px;right:6px;width:9px;height:9px;background:var(--grey-5);transform:rotate(45deg);border-radius:2px}
+.info-wrap:hover .tooltip{opacity:1;transform:translateY(0)}
+.group-body .item:nth-last-child(-n+2) .tooltip{top:auto;bottom:26px}
+.group-body .item:nth-last-child(-n+2) .tooltip::before{top:auto;bottom:-5px}
+
+/* ══ HEURISTIC BADGE ══ */
+.h-badge{display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--amber-lite);color:var(--amber);border:1px solid #FDE68A;white-space:nowrap}
+
+/* ══ PRIORITY DOT ══ */
+.prio{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px}
+.prio-1{background:#EF4444}
+.prio-2{background:#F97316}
+.prio-3{background:#EAB308}
+
+/* ══ EMPTY ══ */
+.empty{display:none;text-align:center;padding:60px 24px;color:var(--grey-2)}
+.empty-icon{font-size:38px;margin-bottom:12px}
+.empty h3{font-weight:800;font-size:15px;margin-bottom:6px;color:var(--grey-3)}
+
+/* ══ FOOTER ══ */
+footer{background:var(--brand);color:rgba(255,255,255,.8);padding:18px 28px;text-align:center;font-size:11.5px;flex-shrink:0}
+.footer-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.footer-copy{text-align:center;line-height:1.7}
+.footer-copy strong{color:#fff}
+.footer-right{font-size:10px;text-align:right;display:flex;gap:12px;align-items:center}
+.footer-right a{color:rgba(255,255,255,.7);text-decoration:none}
+.footer-right a:hover{color:#fff}
+
+/* ══ SCROLL TOP ══ */
+#scrollTop{position:fixed;bottom:24px;right:24px;background:var(--brand);color:#fff;border:none;border-radius:50%;width:40px;height:40px;font-size:17px;cursor:pointer;display:none;box-shadow:0 4px 16px rgba(27,43,94,.35);z-index:500;transition:background .2s}
+#scrollTop:hover{background:var(--brand-mid)}
+
+/* ══ LEGEND ══ */
+.legend{max-width:1200px;margin:0 auto 20px;padding:0 20px}
+.legend-inner{background:#fff;border-radius:var(--radius);border:1px solid var(--grey-1);padding:14px 18px;display:flex;flex-wrap:wrap;gap:30px;align-items:center;border-top-left-radius: 0px;border-top-right-radius: 0px;border-top: 0px;}
+.legend-title{font-size:11px;font-weight:800;color:var(--grey-2);text-transform:uppercase;letter-spacing:.8px;margin-right:4px}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--grey-3);}
+.l-dot{width:8px;height:8px;border-radius:50%}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:768px){
+  .hero{padding:20px 14px 18px}
+  .filter-inner{padding:8px 12px;gap:5px;height:auto;min-height:var(--filter-h)}
+  .action-inner{padding:7px 12px}
+  .main{padding:14px 10px 40px}
+  .tooltip{width:220px}
+  .act-btn span,.reset-btn span,.export-btn span{display:none}
+  .footer-inner{flex-direction:column;gap:10px;text-align:center}
+}
+@media(max-width:480px){
+  .chip{width:34px;height:34px;font-size:14px}
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero" id="hero">
+  <div class="hero-inner">
+
+    <div style="margin-bottom:20px">
+      <img src="https://www.6dtechnologies.com/wp-content/uploads/2023/09/Logo_A_Reverse_R_Full_White.png" alt="6D Technologies" style="height:30px;width:auto;display:block"/>
+    </div>
+    <h1>UX & Accessibility Design Audit Checklist</h1>
+    <p class="hero-sub">A comprehensive, design-team-focused checklist covering <strong>WCAG 2.1 Level AA</strong>, <strong>Nielsen Norman's 10 Usability Heuristics</strong>, and <strong>B2B-specific UX patterns</strong>. <br> Each item maps to a unique ID for Jira/Linear tracking and is prioritised by severity impact.</p>
+    <div class="hero-pills">
+      <span class="hero-pill">👁 Perceivable</span>
+      <span class="hero-pill">⌨ Operable</span>
+      <span class="hero-pill">🧠 Understandable</span>
+      <span class="hero-pill">🔧 Robust</span>
+      <span class="hero-pill">🎛 Usability Heuristics</span>
+      <span class="hero-pill">🏢 B2B Patterns</span>
+    </div>
+    <div class="hero-prog">
+      <div class="prog-row">
+        <div class="prog-bg"><div class="prog-bar" id="pBar"></div></div>
+        <div class="prog-text" id="pText">0 / 0</div>
+      </div>
+      <div class="prog-sub" id="pSub">0% complete</div>
+    </div>
+  </div>
+</div>
+
+<!-- STICKY -->
+<div class="sticky-head" id="stickyHead">
+  <div class="s-logo">
+    <div class="s-logo-box"><img src="https://www.6dtechnologies.com/wp-content/uploads/2023/09/Logo_A_Reverse_R_Full_White.png" alt="6D Technologies" style="height:20px;width:auto;display:block"/></div>
+  </div>
+  <div class="s-div"></div>
+  <div class="s-title">UX & Accessibility Design Audit Checklist</div>
+  <div class="s-pb-bg"><div class="s-pb" id="sPBar"></div></div>
+  <div class="s-pt" id="sPText">0 / 0</div>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar" id="filterBar">
+  <div class="filter-inner">
+    <!-- Category -->
+    <div class="fg">
+      <button class="chip active" data-g="cat" data-v="all"><span class="chip-all">⊞</span><span class="chip-tip">All Categories</span></button>
+      <button class="chip" data-g="cat" data-v="wcag">♿<span class="chip-tip">WCAG Only</span></button>
+      <button class="chip" data-g="cat" data-v="ux">🎛<span class="chip-tip">UX Heuristics</span></button>
+      <button class="chip" data-g="cat" data-v="b2b">🏢<span class="chip-tip">B2B Patterns</span></button>
+    </div>
+    <div class="fsep"></div>
+    <!-- Severity -->
+    <div class="fg">
+      <button class="chip active" data-g="sev" data-v="all"><span class="chip-all">🎯</span><span class="chip-tip">All Priorities</span></button>
+      <button class="chip" data-g="sev" data-v="1">🔴<span class="chip-tip">Critical</span></button>
+      <button class="chip" data-g="sev" data-v="2">🟠<span class="chip-tip">Major</span></button>
+      <button class="chip" data-g="sev" data-v="3">🟡<span class="chip-tip">Minor</span></button>
+    </div>
+    <div class="fsep"></div>
+    <!-- Status -->
+    <div class="fg">
+      <button class="chip active" data-g="status" data-v="all"><span class="chip-all">📋</span><span class="chip-tip">All Items</span></button>
+      <button class="chip" data-g="status" data-v="pending">⏳<span class="chip-tip">Pending</span></button>
+      <button class="chip" data-g="status" data-v="done">✅<span class="chip-tip">Done</span></button>
+    </div>
+    <div class="fsep"></div>
+    <div class="search-wrap">
+      <input type="text" id="searchInput" placeholder="Search by keyword or ID — e.g. #UX-H1-001" autocomplete="off"/>
+      <button class="sc" id="clearSearch" title="Clear">✕</button>
+    </div>
+  </div>
+</div>
+
+<!-- ACTION BAR -->
+<div class="action-bar">
+  <div class="action-inner">
+    <div id="statsWrap" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center"></div>
+    <div class="action-btns">
+      <button class="act-btn" id="expandAll">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M2 5l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Expand All</span>
+      </button>
+      <button class="act-btn" id="collapseAll">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M14 11L8 5l-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Collapse All</span>
+      </button>
+      <button class="reset-btn" id="resetBtn">
+        <span class="ri"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></span>
+        <span>Reset All</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-inner">
+    <div class="legend-item"><div class="l-dot" style="background:#EF4444"></div>Legal/blocker</div>
+    <div class="legend-item"><div class="l-dot" style="background:#F97316"></div>Significant UX impact</div>
+    <div class="legend-item"><div class="l-dot" style="background:#EAB308"></div>Enhancement</div>
+    <div class="fsep" style="height:16px;margin:0 4px"></div>
+    <div class="legend-item"><span class="tag tWCAG">WCAG</span> Accessibility standard</div>
+    <div class="legend-item"><span class="tag tUX">UX</span> Usability / Heuristic</div>
+    <div class="legend-item"><span class="tag tH">H#</span> Nielsen Heuristic</div>
+    <div class="legend-item"><span class="tag tA">A</span><span class="tag tAA" style="margin-left:3px">AA</span> Conformance level</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="page-content">
+  <div class="main" id="main"></div>
+  <div class="empty" id="empty">
+    <div class="empty-icon">🔍</div>
+    <h3>No checks found</h3>
+    <p>Try adjusting your filters or search query.</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-copy">&copy; <span id="yr"></span> Design Systems Team. For internal use.<br/><span style="font-size:10px;opacity:.65">WCAG 2.1 · Nielsen Norman Heuristics · B2B UX Standards</span></div>
+    <div class="footer-right">
+      <a href="https://www.w3.org/WAI/WCAG21/quickref/" target="_blank">W3C WCAG 2.1 ↗</a>
+      <a href="https://www.nngroup.com/articles/ten-usability-heuristics/" target="_blank">NN/g Heuristics ↗</a>
+    </div>
+  </div>
+</footer>
+
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
+
+<script>
+document.getElementById("yr").textContent = new Date().getFullYear();
+
+// ══════════════════════════════════════════
+// DATA
+// cat: "wcag" | "ux" | "b2b"
+// sev: 1=critical, 2=major, 3=minor
+// lv: "A"|"AA"|"UX"|"H"
+// heuristic: Nielsen heuristic # (optional)
+// ══════════════════════════════════════════
+const DATA = [
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 1. PERCEIVABLE
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+{
+  id:"perceivable", label:"Perceivable", icon:"👁",
+  desc:"Information must be presentable in ways users can perceive",
+  color:"var(--brand)", bg:"#EEF2FF", border:"var(--brand)",
+  groups:[
+    {
+      title:"Colour & Contrast", sub:"Visual clarity, colour independence", gcat:"wcag",
+      items:[
+        {id:"#UX-P01-CC001", t:"Body text meets minimum 4.5:1 contrast ratio against its background in all states (default, hover, disabled)", lv:"AA", cat:"wcag", sev:1, info:"Use Figma Able plugin or Contrast Checker. Applies to all text including placeholder text, helper text, and tooltips. Disabled states are exempt but should still aim for 3:1."},
+        {id:"#UX-P01-CC002", t:"Large text (≥18pt regular / ≥14pt bold) meets minimum 3:1 contrast ratio", lv:"AA", cat:"wcag", sev:1, info:"Large text allowance applies to genuinely large headings only — not small body text styled slightly larger. Verify using exact px/pt sizes in Figma specs."},
+        {id:"#UX-P01-CC003", t:"UI component boundaries — inputs, buttons, checkboxes, radios — meet 3:1 contrast against adjacent background", lv:"AA", cat:"wcag", sev:1, info:"Input field borders must be distinguishable from white backgrounds. A light grey border (#D1D5DB) on white (#FFF) is approximately 1.6:1 — a failure. Use at least #767676."},
+        {id:"#UX-P01-CC004", t:"Colour is never the sole means of conveying status — pair every colour signal with an icon, label, or pattern", lv:"A", cat:"wcag", sev:1, info:"Error (red), success (green), warning (amber) states used only as colour changes fail for 8% of male users with CVD. Always combine with a distinct icon shape AND text label."},
+        {id:"#UX-P01-CC005", t:"Data visualisations (charts, graphs, status dashboards) are distinguishable without colour using shape, pattern, or direct labels", lv:"AA", cat:"wcag", sev:2, info:"B2B dashboards with multi-series charts must not rely solely on colour. Use direct data labels, distinct line styles (solid/dashed/dotted), or pattern fills alongside colour."},
+        {id:"#UX-P01-CC006", t:"Focus indicators meet 3:1 contrast against adjacent colours and have minimum 2px outline width", lv:"AA", cat:"wcag", sev:1, info:"WCAG 2.4.11 (AA) requires focus indicators to have area ≥ perimeter of component × 2px. Custom focus styles must be clearly visible — never use outline:0 without a replacement."},
+        {id:"#UX-P01-CC007", t:"Dark mode colour tokens are independently verified to maintain 4.5:1 and 3:1 ratios — not assumed to pass", lv:"AA", cat:"wcag", sev:2, info:"Auto-generated dark mode inversions frequently fail contrast. Light grey on dark grey can fail just as easily. All dark mode semantic colour pairs must be explicitly audited."},
+        {id:"#UX-P01-CC008", t:"Status badge colours in dashboards (RAG, SLA, health indicators) are supplemented with text labels", lv:"AA", cat:"b2b", sev:1, info:"B2B SLA dashboards with red/amber/green traffic lights must always include text: 'Critical', 'Warning', 'Healthy'. Never rely on colour position alone in data-dense screens."},
+      ]
+    },
+    {
+      title:"Typography & Text Scalability", sub:"Readability, zoom, spacing", gcat:"wcag",
+      items:[
+        {id:"#UX-P01-TY001", t:"All text content is readable and functional at 200% browser zoom without horizontal scrolling", lv:"AA", cat:"wcag", sev:1, info:"Test by pressing Ctrl/Cmd+'+' to 200% zoom. All content must reflow into a single column. Truncated text, hidden labels, and broken layouts at zoom are failures."},
+        {id:"#UX-P01-TY002", t:"Content is fully usable at 320px viewport width (equivalent to 1280px at 400% zoom)", lv:"AA", cat:"wcag", sev:2, info:"Required by WCAG 1.4.10 Reflow. Critical for low-vision users who use extreme zoom. Test with DevTools at 320px. Navigation must collapse gracefully."},
+        {id:"#UX-P01-TY003", t:"UI does not break when user overrides text spacing: line-height ≥1.5×, letter-spacing ≥0.12em, word-spacing ≥0.16em", lv:"AA", cat:"wcag", sev:2, info:"Fixed-height containers that clip overflowed text are a WCAG 1.4.12 failure. Test with the WCAG Text Spacing bookmarklet. All containers must expand to accommodate spacing overrides."},
+        {id:"#UX-P01-TY004", t:"Font sizes use relative units (rem/em) — not fixed px — for body and interactive element text", lv:"AA", cat:"wcag", sev:2, info:"Pixel-locked font sizes prevent users from scaling text using browser preferences. Use rem for base sizes and em for component-relative sizes."},
+        {id:"#UX-P01-TY005", t:"Line length (measure) for body text is between 60–80 characters to optimise readability", lv:"UX", cat:"ux", sev:3, info:"Dense B2B data views tempt full-width text paragraphs. Long line lengths reduce reading speed and comprehension. Use max-width constraints on text containers."},
+        {id:"#UX-P01-TY006", t:"Hierarchy between heading levels is visually clear with minimum 4pt size difference between adjacent levels", lv:"UX", cat:"ux", sev:3, info:"H1 to H2 should have a clear, immediately perceivable size difference. Flat type scales where all headings look similar break visual hierarchy and scanability."},
+      ]
+    },
+    {
+      title:"Non-Text Content & Media", sub:"Alt text, images, video, icons", gcat:"wcag",
+      items:[
+        {id:"#UX-P01-NT001", t:"All informative images have accurate, contextual alt text — not file names, 'image of', or redundant descriptions", lv:"A", cat:"wcag", sev:1, info:"Alt text must communicate the purpose of the image in context. For product images: include colour, key features, and view angle. For charts: describe the key insight, not 'a bar chart'."},
+        {id:"#UX-P01-NT002", t:"Decorative images use empty alt='' and are marked role='presentation' to be ignored by screen readers", lv:"A", cat:"wcag", sev:1, info:"Background textures, divider illustrations, and purely decorative icons must not add noise to screen reader output. Mark them explicitly as decorative."},
+        {id:"#UX-P01-NT003", t:"Icon-only buttons carry an accessible label via aria-label or visually hidden text — never rely on title attribute alone", lv:"A", cat:"wcag", sev:1, info:"The HTML title attribute is not reliably announced by screen readers and is invisible on touch devices. Use aria-label='Delete record' on icon-only interactive elements."},
+        {id:"#UX-P01-NT004", t:"Data tables and charts in dashboards have accessible text alternatives (summary + data table toggle)", lv:"AA", cat:"b2b", sev:2, info:"Every analytics chart must offer a 'View data table' toggle exposing the same data in a structured, keyboard-navigable HTML table for screen reader users."},
+        {id:"#UX-P01-NT005", t:"Pre-recorded video has synchronised captions reviewed for accuracy — not unedited auto-generated captions only", lv:"A", cat:"wcag", sev:1, info:"Auto-generated captions are often 60–80% accurate — insufficient for compliance. Captions must be reviewed, corrected, and properly synchronised."},
+        {id:"#UX-P01-NT006", t:"Complex infographics and process diagrams have a text description or structured data alternative", lv:"A", cat:"wcag", sev:2, info:"A process flow diagram cannot be meaningfully described in short alt text. Provide a numbered text description of the steps and decisions below the image."},
+      ]
+    }
+  ]
+},
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 2. OPERABLE
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+{
+  id:"operable", label:"Operable", icon:"⌨",
+  desc:"UI components and navigation must be operable by all users",
+  color:"var(--teal)", bg:"var(--teal-lite)", border:"var(--teal)",
+  groups:[
+    {
+      title:"Keyboard & Focus Management", sub:"Tab order, focus traps, shortcuts", gcat:"wcag",
+      items:[
+        {id:"#UX-O02-KF001", t:"All interactive elements are reachable and operable via keyboard (Tab, Shift+Tab, Enter, Space, Arrow keys)", lv:"A", cat:"wcag", sev:1, info:"Every workflow — searching, filtering, opening modals, submitting forms, sorting tables — must be completable without a mouse. Test each critical user journey keyboard-only."},
+        {id:"#UX-O02-KF002", t:"No keyboard traps — users can navigate into and out of every component using Tab, Shift+Tab, or Esc", lv:"A", cat:"wcag", sev:1, info:"A keyboard trap is when focus enters a component and cannot exit without a mouse click. Common failures: custom date pickers, embedded maps, rich text editors."},
+        {id:"#UX-O02-KF003", t:"Focus order matches the visual reading order (top to bottom, left to right / right to left for RTL)", lv:"A", cat:"wcag", sev:1, info:"CSS can visually reorder content (flexbox order property, absolute positioning) while DOM order — what screen readers and keyboard users follow — remains illogical."},
+        {id:"#UX-O02-KF004", t:"Visible focus indicator is always present on all focusable elements — never suppressed globally with outline:0", lv:"AA", cat:"wcag", sev:1, info:"WCAG 2.4.11 Focus Appearance (AA) requires focus indicators to be clearly visible. Remove outline only when replacing with a custom focus style on that specific element."},
+        {id:"#UX-O02-KF005", t:"Modal dialogs, drawers, and flyout panels trap focus inside when open and return focus to the trigger on close", lv:"AA", cat:"wcag", sev:1, info:"When a modal opens: (1) focus moves to the first focusable element inside, (2) Tab/Shift+Tab cycle within the modal only, (3) Esc closes and returns focus to the trigger element."},
+        {id:"#UX-O02-KF006", t:"Custom widgets (data grids, date pickers, tree views, sliders) implement ARIA keyboard patterns from the APG", lv:"A", cat:"wcag", sev:1, info:"The ARIA Authoring Practices Guide defines exact keyboard interactions for each widget type. Date pickers: arrow keys for day navigation, Enter to select, Esc to close."},
+        {id:"#UX-O02-KF007", t:"Single-character keyboard shortcuts can be turned off or remapped — critical in data-entry-heavy B2B tools", lv:"AA", cat:"wcag", sev:2, info:"In B2B tools where screen reader users work extensively, single-char shortcuts like 'S' to search or 'D' to delete conflict with screen reader navigation modes."},
+        {id:"#UX-O02-KF008", t:"Keyboard shortcuts used in the application are documented in a discoverable help panel or settings page", lv:"UX", cat:"ux", sev:3, heuristic:10, info:"H10 — Help and Documentation. B2B power users rely on shortcuts for productivity, but undocumented shortcuts are effectively unavailable. Document all shortcuts in an accessible ?/help panel."},
+        {id:"#UX-O02-KF009", t:"Skip to main content link is the first focusable element on every page and becomes visible on keyboard focus", lv:"A", cat:"wcag", sev:1, info:"Without a skip link, keyboard users must Tab through entire navigation menus — sometimes 30+ items — before reaching the main content on every page load."},
+      ]
+    },
+    {
+      title:"Interactive Target Sizing", sub:"Click areas, touch targets, spacing", gcat:"wcag",
+      items:[
+        {id:"#UX-O02-TS001", t:"All interactive elements meet minimum 44×44px click/touch target size including padding", lv:"AA", cat:"wcag", sev:2, info:"WCAG 2.5.8 AA minimum is 24×24px, but aim for 44×44px per Apple HIG and Material Design guidelines. Icon buttons especially need sufficient hit area padding."},
+        {id:"#UX-O02-TS002", t:"Spacing between adjacent interactive elements is at least 8px to prevent accidental activation", lv:"AA", cat:"wcag", sev:2, info:"Tightly packed action buttons in B2B tables (Edit / Delete / View) are a common failure. Group or separate destructive actions from confirmatory ones."},
+        {id:"#UX-O02-TS003", t:"Drag-and-drop interactions (kanban, sortable lists, file upload) have an equivalent keyboard and pointer-only alternative", lv:"AA", cat:"wcag", sev:2, info:"Drag interactions are inaccessible to keyboard-only, switch, and voice control users. Provide Move Up/Down buttons, a position input, or a right-click context menu as alternatives."},
+      ]
+    },
+    {
+      title:"Timing & Motion", sub:"Timeouts, animations, reduced motion", gcat:"wcag",
+      items:[
+        {id:"#UX-O02-TM001", t:"Session timeouts warn users at least 20 seconds before expiry with an option to extend — critical for long-form B2B workflows", lv:"A", cat:"wcag", sev:1, info:"B2B users completing complex multi-step processes (contracts, configurations) take longer. A session expiry warning must appear with an option to extend without losing work."},
+        {id:"#UX-O02-TM002", t:"Auto-playing animations and carousels lasting more than 5 seconds have a pause/stop control", lv:"A", cat:"wcag", sev:2, info:"Auto-playing content interferes with screen readers. The pause control must be reachable by keyboard before the animation is encountered."},
+        {id:"#UX-O02-TM003", t:"All UI transitions, micro-animations, and loading animations respect prefers-reduced-motion system setting", lv:"AA", cat:"wcag", sev:2, info:"Implement @media (prefers-reduced-motion: reduce) to replace motion animations with instant transitions or subtle opacity fades. Parallax effects must be completely removed."},
+        {id:"#UX-O02-TM004", t:"Nothing flashes more than 3 times per second — loading skeletons and progress animations are exempt if below threshold", lv:"A", cat:"wcag", sev:1, info:"Content flashing faster than 3 Hz can trigger photosensitive epileptic seizures. This is an absolute WCAG 2.3.1 failure. Test any animation-heavy feature with PEAT."},
+      ]
+    }
+  ]
+},
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 3. UNDERSTANDABLE
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+{
+  id:"understandable", label:"Understandable", icon:"🧠",
+  desc:"Information and UI operation must be understandable",
+  color:"var(--amber)", bg:"var(--amber-lite)", border:"var(--amber)",
+  groups:[
+    {
+      title:"System Visibility & Feedback", sub:"H1 — Heuristic 1: Visibility of system status", gcat:"ux",
+      items:[
+        {id:"#UX-U03-SV001", t:"Every action that takes >1 second to complete shows a loading indicator — spinner, skeleton, or progress bar", lv:"UX", cat:"ux", sev:2, heuristic:1, info:"H1 — Users must always know whether the system is processing. A frozen UI with no feedback creates uncertainty and triggers duplicate clicks. Show loading state within 100ms."},
+        {id:"#UX-U03-SV002", t:"Asynchronous operations (bulk imports, report exports, data syncs) show real-time progress with percentage or step count", lv:"UX", cat:"b2b", sev:2, heuristic:1, info:"H1 — B2B operations like CSV imports, API syncs, and bulk exports can take minutes. Show progress: 'Processing 1,200 of 5,400 records (22%)'. Allow background continuation."},
+        {id:"#UX-U03-SV003", t:"Success, error, and warning states are confirmed through persistent feedback — not just a 3-second toast", lv:"UX", cat:"b2b", sev:2, heuristic:1, info:"H1 — For critical B2B actions (contract signed, payment processed, user deactivated), a toast that disappears in 3s is insufficient. Show a persistent confirmation state on the record."},
+        {id:"#UX-U03-SV004", t:"Status messages are announced to screen readers via aria-live regions without requiring focus movement", lv:"AA", cat:"wcag", sev:1, info:"Toast messages, cart updates, and form success states must use aria-live='polite' so screen reader users receive the feedback without their focus being disrupted."},
+        {id:"#UX-U03-SV005", t:"Active navigation state, current page, and user location in hierarchy are clearly indicated visually and programmatically", lv:"AA", cat:"wcag", sev:2, heuristic:1, info:"H1 — Use aria-current='page' on active nav items, breadcrumbs with aria-label='Breadcrumb', and visually distinct active states. Users in complex B2B apps need constant wayfinding cues."},
+      ]
+    },
+    {
+      title:"Match Between System & Real World", sub:"H2 — Familiar language and mental models", gcat:"ux",
+      items:[
+        {id:"#UX-U03-RW001", t:"UI copy uses domain vocabulary familiar to the target B2B persona — no engineering jargon in end-user interfaces", lv:"UX", cat:"ux", sev:2, heuristic:2, info:"H2 — Terms like 'payload', 'endpoint', 'cron job', or 'null value' must never appear in end-user interfaces without explanation. Match the language of the user's business domain."},
+        {id:"#UX-U03-RW002", t:"Icons use universally recognised metaphors and are always paired with a visible text label in B2B tools", lv:"UX", cat:"b2b", sev:2, heuristic:2, info:"H2 — Icon-only interfaces are ambiguous. A 'settings' gear, 'delete' trash, and 'export' icon may be familiar — but custom action icons in B2B tools must always carry a text label."},
+        {id:"#UX-U03-RW003", t:"Error messages use plain language explaining what happened and what the user should do next — no error codes alone", lv:"AA", cat:"wcag", sev:2, heuristic:2, info:"H2 / WCAG 3.3.1 — 'Error 422: Unprocessable Entity' is useless. Write: 'We couldn't save your changes. Check that all required fields are filled in and try again.'"},
+        {id:"#UX-U03-RW004", t:"Date, time, currency, and number formats follow the user's locale or are configurable in account settings", lv:"UX", cat:"b2b", sev:2, heuristic:2, info:"H2 — B2B platforms serving global teams must localise formats. DD/MM/YYYY vs MM/DD/YYYY and $1,234.56 vs €1.234,56 create critical data-entry errors in finance and procurement tools."},
+      ]
+    },
+    {
+      title:"User Control & Freedom", sub:"H3 — Undo, exit, and error recovery", gcat:"ux",
+      items:[
+        {id:"#UX-U03-CF001", t:"All destructive actions (delete, deactivate, archive) require explicit confirmation and offer an undo mechanism where possible", lv:"AA", cat:"wcag", sev:1, heuristic:3, info:"H3 / WCAG 3.3.4 — Show a confirmation dialog for destructive actions. Prefer a timed undo toast (10s) for reversible actions. Never make permanent changes on single click."},
+        {id:"#UX-U03-CF002", t:"Multi-step wizards and complex forms provide a clear 'Back' path that preserves previously entered data", lv:"UX", cat:"b2b", sev:2, heuristic:3, info:"H3 — B2B onboarding flows, contract builders, and configuration wizards must not lose data when users navigate backwards. Preserve all entered values across steps."},
+        {id:"#UX-U03-CF003", t:"Long forms auto-save or warn users before losing unsaved data on page navigation", lv:"UX", cat:"b2b", sev:2, heuristic:3, info:"H3 — 'You have unsaved changes. Leave this page?' is a safety net. Better: auto-save with a visible 'Draft saved' timestamp. Critical for complex B2B data entry."},
+        {id:"#UX-U03-CF004", t:"Users can cancel in-progress bulk operations, imports, or long-running processes", lv:"UX", cat:"b2b", sev:3, heuristic:3, info:"H3 — Initiated a 10,000-row import that's failing? Users must be able to cancel mid-process. Always provide a Cancel button for operations taking more than a few seconds."},
+      ]
+    },
+    {
+      title:"Consistency & Standards", sub:"H4 — Predictability and platform conventions", gcat:"ux",
+      items:[
+        {id:"#UX-U03-CS001", t:"Component behaviour is consistent across the entire product — same trigger, same interaction, same outcome everywhere", lv:"AA", cat:"wcag", sev:2, heuristic:4, info:"H4 / WCAG 3.2.4 — If clicking a row in one table opens a detail panel, all tables in the product must behave the same way. Inconsistent patterns break the mental model."},
+        {id:"#UX-U03-CS002", t:"Action labels are identical for the same action throughout the product — not 'Save' in one place and 'Submit' in another", lv:"AA", cat:"wcag", sev:2, heuristic:4, info:"H4 / WCAG 3.2.4 — Inconsistent labelling of the same action confuses users with cognitive disabilities and creates training inconsistencies for enterprise B2B rollouts."},
+        {id:"#UX-U03-CS003", t:"Navigation structure, primary actions, and layout follow consistent positioning across all product screens", lv:"AA", cat:"wcag", sev:2, heuristic:4, info:"H4 / WCAG 3.2.3 — Primary navigation must appear in the same location on every page. Action buttons (Create, Save, Cancel) must follow a consistent placement pattern."},
+        {id:"#UX-U03-CS004", t:"New component patterns are reviewed against the design system before introduction to prevent one-off inconsistencies", lv:"UX", cat:"b2b", sev:3, heuristic:4, info:"H4 — Every new interaction pattern introduced outside the design system creates inconsistency debt. Establish a design review gate requiring design system approval before new patterns ship."},
+      ]
+    },
+    {
+      title:"Error Prevention", sub:"H5 — Design to prevent mistakes before they occur", gcat:"ux",
+      items:[
+        {id:"#UX-U03-EP001", t:"Form fields display expected format, constraints, and examples as helper text before the user interacts — not just on error", lv:"A", cat:"wcag", sev:2, heuristic:5, info:"H5 / WCAG 3.3.2 — Show 'Format: DD/MM/YYYY' or 'Must be 8–20 characters' before the user types. Preventive guidance reduces errors far more than post-input validation."},
+        {id:"#UX-U03-EP002", t:"High-consequence B2B actions (send to all users, delete all records, trigger billing) have a multi-step confirmation or type-to-confirm pattern", lv:"UX", cat:"b2b", sev:1, heuristic:5, info:"H5 — Destructive bulk operations should require users to type a confirmation phrase like 'DELETE ALL' or the resource name. This forces intentional, deliberate action."},
+        {id:"#UX-U03-EP003", t:"Inline validation fires on blur (field exit) — not keystroke-by-keystroke — except for real-time format feedback like password strength", lv:"AA", cat:"wcag", sev:2, heuristic:5, info:"H5 / WCAG 3.3.1 — Premature error messages while a user is actively typing are disruptive. Validate on blur. Exception: password strength meters and character counters are helpful in real-time."},
+        {id:"#UX-U03-EP004", t:"Autocomplete, smart defaults, and pre-filled fields reduce manual entry burden in repetitive B2B data entry workflows", lv:"UX", cat:"b2b", sev:3, heuristic:5, info:"H5 — B2B tools used daily benefit from smart defaults (last used values, role-based defaults) and autocomplete on known entities (customers, products, locations) to reduce errors."},
+        {id:"#UX-U03-EP005", t:"Required fields are clearly indicated with a visible legend and aria-required='true' on the input element", lv:"A", cat:"wcag", sev:1, info:"The asterisk convention must be explained at the top of the form. Required state must also be programmatically set via aria-required='true' or the native required attribute."},
+      ]
+    },
+    {
+      title:"Recognition Over Recall", sub:"H6 — Reduce memory load", gcat:"ux",
+      items:[
+        {id:"#UX-U03-RR001", t:"Navigation items, action labels, and UI affordances are visible at all times — not hidden in unexplained icons or hover-only states", lv:"UX", cat:"ux", sev:2, heuristic:6, info:"H6 — Users should not need to remember where hidden actions are. Action menus revealed only on row hover are commonly missed. Keep primary actions always visible."},
+        {id:"#UX-U03-RR002", t:"Contextual menus, tooltips, and command palettes surface available actions rather than requiring users to recall them from memory", lv:"UX", cat:"b2b", sev:2, heuristic:6, info:"H6 — Complex B2B tools with many capabilities should provide a command palette (⌘K) and contextual right-click menus that surface all available actions for the selected context."},
+        {id:"#UX-U03-RR003", t:"Applied filters, active selections, and current search query are always visible and easily clearable", lv:"UX", cat:"b2b", sev:2, heuristic:6, info:"H6 — Users of B2B list views and dashboards must always see what filters are active. Persistent filter chips with individual clear buttons prevent 'why am I seeing no results?' confusion."},
+        {id:"#UX-U03-RR004", t:"Recently used items, saved searches, and history are surfaced to reduce repeat navigation in complex data tools", lv:"UX", cat:"b2b", sev:3, heuristic:6, info:"H6 — B2B users return to the same records, reports, and workflows daily. 'Recently viewed' sections, pinned items, and saved views reduce navigation overhead significantly."},
+      ]
+    },
+    {
+      title:"Forms & Input Assistance", sub:"Validation, error handling, recovery", gcat:"wcag",
+      items:[
+        {id:"#UX-U03-IA001", t:"Form validation errors describe exactly what is wrong and specifically how to fix it", lv:"A", cat:"wcag", sev:1, info:"WCAG 3.3.1 — Not 'Invalid input' but 'Email address must include @ and a domain, e.g. name@company.com'. Vague error messages force users to guess the correct format."},
+        {id:"#UX-U03-IA002", t:"Error messages are programmatically associated with their input via aria-describedby and announced automatically on screen readers", lv:"A", cat:"wcag", sev:1, info:"Link each error message to its input: aria-describedby='email-error' on the input, id='email-error' on the error. Move focus to the first error or use aria-live='assertive' after submission."},
+        {id:"#UX-U03-IA003", t:"Password fields have a show/hide toggle and use correct autocomplete attributes to support password managers", lv:"AA", cat:"wcag", sev:2, info:"Use autocomplete='current-password' for login and autocomplete='new-password' for registration. Show/hide toggles dramatically reduce password entry errors for all users."},
+        {id:"#UX-U03-IA004", t:"Date/time inputs clearly specify expected format or use a fully keyboard-accessible date picker component", lv:"AA", cat:"wcag", sev:2, info:"WCAG 1.3.5 — Use autocomplete='bday' for birthdates, 'tel-national' for phone, etc. For date pickers, follow the APG date picker pattern with full keyboard navigation."},
+        {id:"#UX-U03-IA005", t:"File upload fields show accepted formats, maximum size, and count limits as helper text before interaction", lv:"AA", cat:"wcag", sev:2, info:"WCAG 3.3.2 — Show 'Accepted: PDF, XLSX. Max: 10MB. Up to 5 files.' before the user selects files. Post-upload errors for format/size are easily preventable with upfront guidance."},
+        {id:"#UX-U03-IA006", t:"Bulk edit and inline edit in data tables support keyboard operation with clear save/cancel per row", lv:"AA", cat:"b2b", sev:2, info:"Inline edit must trigger on Enter/F2, Tab to next editable cell, Enter to save, Esc to cancel. Unsaved changes per row must be visually flagged. Follow the ARIA grid pattern."},
+      ]
+    }
+  ]
+},
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 4. ROBUST
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+{
+  id:"robust", label:"Robust", icon:"🔧",
+  desc:"Content must be robust enough for assistive technologies to parse reliably",
+  color:"var(--rose)", bg:"var(--rose-lite)", border:"var(--rose)",
+  groups:[
+    {
+      title:"ARIA & Semantic Structure", sub:"Roles, names, states, values", gcat:"wcag",
+      items:[
+        {id:"#UX-R04-AR001", t:"Every interactive element has an accessible name, meaningful role, and all relevant states exposed via ARIA", lv:"A", cat:"wcag", sev:1, info:"The Name-Role-Value triad: Name (from label/aria-label/aria-labelledby), Role (from element tag or role attribute), State/Value (aria-checked, aria-expanded, aria-selected, aria-disabled)."},
+        {id:"#UX-R04-AR002", t:"Page landmark regions are correctly defined: header, nav, main, aside, footer — not div-soup layouts", lv:"A", cat:"wcag", sev:1, info:"Screen reader users navigate by landmarks. A page with no landmarks is equivalent to a document with no headings. Use HTML5 semantic elements: <header>, <nav>, <main>, <aside>, <footer>."},
+        {id:"#UX-R04-AR003", t:"Dynamic state changes (loading, expanded, selected, disabled) are reflected in ARIA attribute updates in real time", lv:"A", cat:"wcag", sev:1, info:"When a collapsible section opens, update aria-expanded='true' in JavaScript. When a tab is selected, update aria-selected='true'. Screen readers announce these state changes."},
+        {id:"#UX-R04-AR004", t:"SPAs announce route changes to screen readers via document.title update and a visually hidden aria-live announcement", lv:"AA", cat:"wcag", sev:1, info:"SPA route changes do not trigger a page reload, so screen readers do not announce 'new page'. Update document.title and inject a short description into an aria-live='polite' region."},
+        {id:"#UX-R04-AR005", t:"HTML is valid — no duplicate IDs, properly nested elements, no stray tags — validated in CI/CD pipeline", lv:"A", cat:"wcag", sev:1, info:"Duplicate IDs break aria-labelledby and aria-describedby references. Invalid HTML causes unpredictable screen reader behaviour. Integrate axe-core or similar in your CI pipeline."},
+      ]
+    },
+    {
+      title:"Navigation & Wayfinding", sub:"Structure, breadcrumbs, titles", gcat:"wcag",
+      items:[
+        {id:"#UX-R04-NV001", t:"Every page has a unique, descriptive title that reflects the current content or task context", lv:"A", cat:"wcag", sev:1, info:"WCAG 2.4.2 — Screen readers announce the page title on load. Generic titles like 'Dashboard' in a product with 10 dashboards are ambiguous. Use: 'Sales Dashboard — Q3 2025 — Acme Corp'."},
+        {id:"#UX-R04-NV002", t:"Heading structure follows a logical hierarchy (H1 → H2 → H3) that reflects information architecture — not visual styling", lv:"A", cat:"wcag", sev:1, info:"Screen reader users navigate B2B tools by jumping between headings. A page where headings jump H1 to H4 or where visual headings use styled divs breaks this navigation entirely."},
+        {id:"#UX-R04-NV003", t:"Link and button text is descriptive of the destination or action — no 'click here', 'read more', or 'view' without context", lv:"A", cat:"wcag", sev:1, info:"WCAG 2.4.6 — Screen reader users can extract a list of all links on a page. 'View | View | View' in a B2B table is meaningless. Use 'View Order #1234' or pair with aria-label."},
+        {id:"#UX-R04-NV004", t:"Complex B2B applications provide multiple ways to find content — search, filtered nav, breadcrumbs, and direct URL access", lv:"AA", cat:"wcag", sev:2, info:"WCAG 2.4.5 — At minimum two navigation methods must exist. Search + navigation satisfies this. Deep-linkable URLs that can be shared or bookmarked are essential in B2B tools."},
+        {id:"#UX-R04-NV005", t:"Pagination, infinite scroll, and load-more patterns announce the number of new items loaded via aria-live", lv:"AA", cat:"wcag", sev:2, info:"When 'Load more' reveals 20 new rows, screen reader users must be told. Announce: '20 more orders loaded. Showing 40 of 350.' via an aria-live='polite' region."},
+      ]
+    }
+  ]
+},
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 5. UX HEURISTICS (NN/g)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+{
+  id:"heuristics", label:"UX Heuristics", icon:"🎛",
+  desc:"Nielsen Norman's 10 Usability Heuristics adapted for B2B product design",
+  color:"var(--purple)", bg:"var(--purple-lite)", border:"var(--purple)",
+  groups:[
+    {
+      title:"Flexibility & Efficiency of Use", sub:"H7 — Accelerators for expert users", gcat:"ux",
+      items:[
+        {id:"#UX-H07-FE001", t:"Expert users can accomplish primary tasks through keyboard shortcuts, command palettes, or bulk actions", lv:"UX", cat:"ux", sev:2, heuristic:7, info:"H7 — B2B power users performing repetitive tasks (data entry clerks, ops teams) need accelerators. Provide: keyboard shortcuts, quick filters, column-level search, and batch operations."},
+        {id:"#UX-H07-FE002", t:"User preferences, saved views, custom filters, and report templates are persistable and shareable across team members", lv:"UX", cat:"b2b", sev:2, heuristic:7, info:"H7 — Enterprise teams need to share standardised views. Allow saving filter combinations, column configurations, and report parameters as named views accessible to the team."},
+        {id:"#UX-H07-FE003", t:"Default values in forms are personalised based on user role, previous inputs, or organisational settings", lv:"UX", cat:"b2b", sev:3, heuristic:7, info:"H7 — Pre-filling fields with the logged-in user's department, country, currency, or last-used values reduces repetitive data entry in high-frequency B2B workflows."},
+        {id:"#UX-H07-FE004", t:"Bulk operations (select all, multi-select, batch edit/export/delete) are available for high-volume B2B data management", lv:"UX", cat:"b2b", sev:2, heuristic:7, info:"H7 — Editing or exporting records one at a time in a system with thousands of records is untenable. Bulk operations are an accessibility and efficiency requirement for B2B tools."},
+      ]
+    },
+    {
+      title:"Aesthetic & Minimalist Design", sub:"H8 — Signal vs. noise in B2B interfaces", gcat:"ux",
+      items:[
+        {id:"#UX-H08-AM001", t:"Each screen contains only information essential to the user's current task — no irrelevant features visible", lv:"UX", cat:"ux", sev:2, heuristic:8, info:"H8 — Every extra element in a B2B interface competes for attention. Progressive disclosure: show the most important 20% always, surface the rest on demand. Dense ≠ powerful."},
+        {id:"#UX-H08-AM002", t:"Data-dense dashboards use whitespace, grouping, and visual hierarchy to guide attention — not additional decoration", lv:"UX", cat:"b2b", sev:2, heuristic:8, info:"H8 — B2B dashboards with 20+ metrics need scannable visual hierarchy. Use size, weight, and whitespace to guide the eye to the most critical KPIs. Avoid chart-junk and decorative elements."},
+        {id:"#UX-H08-AM003", t:"Secondary and rarely-used actions are progressively disclosed (overflow menus, secondary panels) not shown at equal prominence", lv:"UX", cat:"b2b", sev:2, heuristic:8, info:"H8 — Rows with 6 action buttons create visual noise and increase decision time. Use a primary action button + '...' overflow menu for secondary actions to reduce cognitive load."},
+      ]
+    },
+    {
+      title:"Help & Documentation", sub:"H10 — Self-service support in B2B tools", gcat:"ux",
+      items:[
+        {id:"#UX-H10-HD001", t:"Empty states include contextual guidance, a relevant CTA, and a link to documentation — never just a blank screen", lv:"UX", cat:"b2b", sev:2, heuristic:10, info:"H10 — Empty states in B2B tools are key onboarding moments. A blank list view should explain what would appear here, offer a 'Create your first X' action, and link to setup docs."},
+        {id:"#UX-H10-HD002", t:"Complex features include contextual inline help (tooltips, info icons, walkthroughs) without requiring users to leave the screen", lv:"UX", cat:"b2b", sev:2, heuristic:10, info:"H10 — For complex B2B configuration panels, provide inline (i) info icons that surface plain-language explanations of each setting without requiring navigation to a separate help page."},
+        {id:"#UX-H10-HD003", t:"Onboarding flows and feature tours can be skipped and are re-accessible from the help menu at any time", lv:"AA", cat:"wcag", sev:2, heuristic:10, info:"H10 / WCAG — Onboarding overlays must be dismissible by keyboard (Esc/Skip button as first focusable element). Completed tours should be re-launchable for new team members."},
+        {id:"#UX-H10-HD004", t:"Error messages in B2B tools link directly to the relevant support article or suggest a resolution step", lv:"UX", cat:"b2b", sev:3, heuristic:10, info:"H10 — 'Contact support' alone is insufficient. When a known error occurs, link to the specific troubleshooting article or surface the most likely resolution inline."},
+      ]
+    },
+    {
+      title:"B2B-Specific UX Patterns", sub:"Enterprise usability requirements", gcat:"b2b",
+      items:[
+        {id:"#UX-B2B-001", t:"Role-based UI (admin vs user vs read-only) maintains consistent layout and accessible structure across all permission levels", lv:"UX", cat:"b2b", sev:2, info:"Hidden or greyed-out controls for lower-permission users must be labelled with the reason ('Read-only — contact your admin to edit'). Don't silently remove UI — explain why it's unavailable."},
+        {id:"#UX-B2B-002", t:"Multi-tenant / organisation switching is clearly indicated in the header and warns before switching context", lv:"UX", cat:"b2b", sev:1, info:"B2B tools used by agencies or parent-child org structures must clearly show the current org context at all times. Switching org must warn if it will navigate away or lose current work."},
+        {id:"#UX-B2B-003", t:"Data tables support sorting, filtering, column configuration, and persistent preferences at both user and role level", lv:"UX", cat:"b2b", sev:2, info:"B2B users working in data-dense tables all day need control over their view. Column reordering, width adjustment, and saved column sets reduce cognitive load for power users."},
+        {id:"#UX-B2B-004", t:"Audit trails, activity logs, and change history are accessible and filterable for compliance and accountability requirements", lv:"UX", cat:"b2b", sev:2, info:"Enterprise B2B tools in regulated industries require audit trails. These logs must be searchable, filterable by user/date/action, exportable, and accessible to appropriate roles."},
+        {id:"#UX-B2B-005", t:"Print and export views (PDF, CSV, Excel) preserve data structure, labels, and context without UI chrome or visual artefacts", lv:"AA", cat:"b2b", sev:2, info:"Exported PDFs and CSVs from B2B tools are shared with stakeholders. Exported reports must be clean, structured, and include metadata (date generated, filters applied, user)."},
+        {id:"#UX-B2B-006", t:"Notification and alert systems support user-configurable preferences — frequency, channel, and type — at individual and team level", lv:"UX", cat:"b2b", sev:3, info:"Alert fatigue is a major B2B usability issue. Allow users to configure which events trigger notifications, through which channels (email/in-app/Slack), and at what frequency."},
+        {id:"#UX-B2B-007", t:"Search results in B2B tools display result count, applied filters, sort order, and relevant metadata (last modified, owner)", lv:"UX", cat:"b2b", sev:2, info:"B2B search results without context (total count, what filters are active) cause confusion. Show: '347 results for 'invoice' · Filtered by: Status = Open · Sorted by: Date desc'."},
+        {id:"#UX-B2B-008", t:"Integrations, webhooks, and API configurations present technical settings with plain-language descriptions and validation feedback", lv:"UX", cat:"b2b", sev:2, heuristic:2, info:"H2 — The admin configuring a Salesforce integration may not be a developer. Configuration screens must use domain language, provide live validation feedback, and surface helpful error messages."},
+      ]
+    }
+  ]
+}
+];
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let F = {cat:"all", sev:"all", status:"all", q:""};
+let checked = {};
+try { checked = JSON.parse(localStorage.getItem("ux_wcag_v1") || "{}"); } catch(e) {}
+
+// ══════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════
+function render(){
+  const main = document.getElementById("main");
+  main.innerHTML = "";
+  let gNum = 0;
+
+  DATA.forEach(sec => {
+    const sd = document.createElement("div");
+    sd.className = "section sec-open";
+    sd.dataset.sec = sec.id;
+
+    const sh = document.createElement("div");
+    sh.className = "sec-header";
+    sh.style.cssText = `background:${sec.bg}`;
+    sh.innerHTML = `
+      <div class="sec-left">
+        <span class="sec-icon">${sec.icon}</span>
+        <div class="sec-info">
+          <div class="sec-title" style="color:${sec.color}">${sec.label}</div>
+          <div class="sec-desc">${sec.desc}</div>
+        </div>
+      </div>
+      <div class="sec-right">
+        <span class="sec-count" id="sc-${sec.id}" style="background:${sec.color};color:#fff"></span>
+        <span class="sec-chev" style="color:${sec.color}">▾</span>
+      </div>`;
+    sh.addEventListener("click", () => sd.classList.toggle("sec-open"));
+
+    const sbody = document.createElement("div");
+    sbody.className = "sec-body";
+
+    sec.groups.forEach((g, gi) => {
+      gNum++;
+      const gc = document.createElement("div");
+      gc.className = "group-card open";
+      gc.dataset.sec = sec.id;
+      gc.dataset.gi = gi;
+
+      const gbody = document.createElement("div");
+      gbody.className = "group-body";
+
+      g.items.forEach((item, ii) => {
+        const key = `${sec.id}.${gi}.${ii}`;
+        item._key = key;
+        const row = document.createElement("div");
+        row.className = "item" + (checked[key] ? " checked" : "");
+        row.dataset.key = key;
+        row.dataset.cat = item.cat;
+        row.dataset.sev = item.sev;
+        row.dataset.sec = sec.id;
+        row.dataset.txt = (item.id + " " + item.t).toLowerCase();
+        row.tabIndex = 0;
+        row.setAttribute("role", "checkbox");
+        row.setAttribute("aria-checked", checked[key] ? "true" : "false");
+
+        const lvTag = item.lv === "A" ? `<span class="tag tA">Level A</span>`
+          : item.lv === "AA" ? `<span class="tag tAA">Level AA</span>`
+          : item.lv === "UX" ? `<span class="tag tUX">UX</span>`
+          : `<span class="tag tH">Heuristic</span>`;
+
+        const catTag = item.cat === "wcag" ? `<span class="tag tWCAG">WCAG</span>`
+          : item.cat === "b2b" ? `<span class="tag" style="background:#FFF7ED;color:#9A3412;font-weight:700">B2B</span>`
+          : `<span class="tag tUX">UX</span>`;
+
+        const hTag = item.heuristic
+          ? `<span class="h-badge">H${item.heuristic}</span>` : "";
+
+        const sevClass = item.sev === 1 ? "prio-1" : item.sev === 2 ? "prio-2" : "prio-3";
+        const sevLabel = item.sev === 1 ? "Critical" : item.sev === 2 ? "Major" : "Minor";
+        const sevTag = `<span class="tag" style="background:${item.sev===1?'#FEE2E2':item.sev===2?'#FFEDD5':'#FEF9C3'};color:${item.sev===1?'#991B1B':item.sev===2?'#9A3412':'#854D0E'};font-weight:700">${sevLabel}</span>`;
+
+        row.innerHTML = `
+          <div class="prio ${sevClass}"></div>
+          <div class="cb">
+            <svg width="10" height="10" viewBox="0 0 12 12" fill="none" style="display:${checked[key]?"block":"none"}">
+              <path d="M2 6l3 3 5-5" stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="ibody">
+            <div class="irow1"><span class="itext">${item.t}</span></div>
+            <div class="irow2">
+              <span class="iid">${item.id}</span>
+              ${lvTag}${catTag}${hTag}${sevTag}
+            </div>
+          </div>
+          <div class="info-wrap">
+            <div class="info-btn">i</div>
+            <div class="tooltip">${item.info}</div>
+          </div>`;
+
+        row.addEventListener("click", e => {
+          if(e.target.closest(".info-wrap")) return;
+          toggleItem(key, row);
+        });
+        row.addEventListener("keydown", e => {
+          if(e.key===" "||e.key==="Enter"){e.preventDefault();toggleItem(key,row);}
+        });
+        gbody.appendChild(row);
+      });
+
+      // group head
+      const ghead = document.createElement("button");
+      ghead.className = "group-head";
+      ghead.setAttribute("aria-expanded","true");
+      const gcatBadge = g.gcat === "wcag"
+        ? `<span class="gcat gcat-wcag">♿ WCAG</span>`
+        : g.gcat === "b2b"
+        ? `<span class="gcat gcat-h">🏢 B2B</span>`
+        : `<span class="gcat gcat-ux">🎛 UX</span>`;
+
+      ghead.innerHTML = `<div class="group-head-inner">
+        <div class="g-num" style="background:${sec.color}">${gNum}</div>
+        <div style="flex:1;min-width:0">
+          <div class="gtitle" style="color:${sec.color}">${g.title}</div>
+          <div class="gsub">${g.sub}</div>
+        </div>
+        <div class="gmeta">
+          <div class="gcats">${gcatBadge}</div>
+          <span class="gcount" id="gc-${sec.id}-${gi}"></span>
+          <span class="gchev">▾</span>
+        </div>
+      </div>`;
+      ghead.addEventListener("click", () => {
+        const open = gc.classList.toggle("open");
+        ghead.setAttribute("aria-expanded", open?"true":"false");
+      });
+
+      gc.appendChild(ghead);
+      gc.appendChild(gbody);
+      sbody.appendChild(gc);
+    });
+
+    sd.appendChild(sh);
+    sd.appendChild(sbody);
+    main.appendChild(sd);
+  });
+}
+
+// ══════════════════════════════════════════
+// TOGGLE
+// ══════════════════════════════════════════
+function toggleItem(key, row){
+  checked[key] = !checked[key];
+  try { localStorage.setItem("ux_wcag_v1", JSON.stringify(checked)); } catch(e){}
+  row.classList.toggle("checked", checked[key]);
+  row.setAttribute("aria-checked", checked[key]?"true":"false");
+  const svg = row.querySelector(".cb svg");
+  if(svg) svg.style.display = checked[key]?"block":"none";
+  updateCounts();
+}
+
+// ══════════════════════════════════════════
+// FILTER
+// ══════════════════════════════════════════
+function applyFilters(){
+  let any = false;
+  document.querySelectorAll(".item").forEach(row => {
+    const cat = row.dataset.cat, sev = row.dataset.sev;
+    const key = row.dataset.key, txt = row.dataset.txt||"";
+    const isDone = !!checked[key];
+    let ok = true;
+    if(F.cat !== "all" && cat !== F.cat) ok = false;
+    if(F.sev !== "all" && sev !== F.sev) ok = false;
+    if(F.status === "done" && !isDone) ok = false;
+    if(F.status === "pending" && isDone) ok = false;
+    if(F.q && !txt.includes(F.q)) ok = false;
+    row.classList.toggle("hidden", !ok);
+    if(ok) any = true;
+  });
+
+  document.querySelectorAll(".group-card").forEach(gc => {
+    const vis = [...gc.querySelectorAll(".item")].some(r => !r.classList.contains("hidden"));
+    gc.style.display = vis ? "" : "none";
+  });
+  document.querySelectorAll(".section").forEach(s => {
+    const vis = [...s.querySelectorAll(".group-card")].some(g => g.style.display !== "none");
+    s.style.display = vis ? "" : "none";
+  });
+
+  document.getElementById("empty").style.display = any ? "none" : "block";
+  document.getElementById("main").style.display = any ? "block" : "none";
+  updateCounts();
+}
+
+// ══════════════════════════════════════════
+// COUNTS
+// ══════════════════════════════════════════
+function updateCounts(){
+  const vis = [...document.querySelectorAll(".item:not(.hidden)")];
+  const total = vis.length;
+  const done = vis.filter(r => r.classList.contains("checked")).length;
+  const pct = total ? Math.round(done/total*100) : 0;
+
+  const pb = document.getElementById("pBar");
+  pb.style.width = pct+"%";
+  pb.className = "prog-bar" + (pct===100?" complete":"");
+  document.getElementById("pText").textContent = `${done} / ${total}`;
+  document.getElementById("pSub").textContent = `${pct}% complete`;
+
+  const sp = document.getElementById("sPBar");
+  sp.style.width = pct+"%";
+  sp.className = "s-pb" + (pct===100?" complete":"");
+  document.getElementById("sPText").textContent = `${done} / ${total}`;
+
+  DATA.forEach(sec => {
+    const sRows = [...document.querySelectorAll(`.item[data-sec="${sec.id}"]:not(.hidden)`)];
+    const sDone = sRows.filter(r=>r.classList.contains("checked")).length;
+    const el = document.getElementById(`sc-${sec.id}`);
+    if(el) el.textContent = `${sDone} / ${sRows.length}`;
+    sec.groups.forEach((g,gi) => {
+      const el2 = document.getElementById(`gc-${sec.id}-${gi}`);
+      if(!el2) return;
+      const gcEl = el2.closest(".group-card");
+      const gRows = gcEl ? [...gcEl.querySelectorAll(".item:not(.hidden)")] : [];
+      el2.textContent = `${gRows.filter(r=>r.classList.contains("checked")).length} / ${gRows.length}`;
+    });
+  });
+
+  const crit = vis.filter(r=>r.dataset.sev==="1").length;
+  const major = vis.filter(r=>r.dataset.sev==="2").length;
+  const minor = vis.filter(r=>r.dataset.sev==="3").length;
+  const wcagC = vis.filter(r=>r.dataset.cat==="wcag").length;
+  const uxC = vis.filter(r=>r.dataset.cat==="ux").length;
+  const b2bC = vis.filter(r=>r.dataset.cat==="b2b").length;
+
+  document.getElementById("statsWrap").innerHTML=`
+    <div class="stat"><div class="stat-dot" style="background:var(--brand)"></div>${total} Total</div>
+    <div class="stat"><div class="stat-dot" style="background:#EF4444"></div>${crit} Critical</div>
+    <div class="stat"><div class="stat-dot" style="background:#F97316"></div>${major} Major</div>
+    <div class="stat"><div class="stat-dot" style="background:#EAB308"></div>${minor} Minor</div>
+    <div class="stat"><div class="stat-dot" style="background:var(--teal)"></div>${wcagC} WCAG</div>
+    <div class="stat"><div class="stat-dot" style="background:var(--purple)"></div>${uxC} UX</div>
+    <div class="stat"><div class="stat-dot" style="background:#9A3412"></div>${b2bC} B2B</div>
+    <div class="stat" style="background:#F0FDF4;border-color:#BBF7D0"><div class="stat-dot" style="background:#16A34A"></div>${done} Done</div>`;
+}
+
+// ══════════════════════════════════════════
+// CHIPS
+// ══════════════════════════════════════════
+document.querySelectorAll(".chip").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const g = btn.dataset.g, v = btn.dataset.v;
+    F[g] = v;
+    document.querySelectorAll(`.chip[data-g="${g}"]`).forEach(c => {
+      c.classList.remove("active","act-ux","act-wcag","act-done");
+    });
+    if(v==="done") btn.classList.add("act-done");
+    else btn.classList.add("active");
+    applyFilters();
+  });
+});
+
+// ══════════════════════════════════════════
+// SEARCH
+// ══════════════════════════════════════════
+const si = document.getElementById("searchInput");
+const cs = document.getElementById("clearSearch");
+si.addEventListener("input", () => {
+  F.q = si.value.trim().toLowerCase();
+  cs.style.display = F.q ? "block" : "none";
+  applyFilters();
+});
+cs.addEventListener("click", () => {
+  si.value = ""; F.q = ""; cs.style.display = "none"; applyFilters();
+});
+
+// ══════════════════════════════════════════
+// EXPAND / COLLAPSE
+// ══════════════════════════════════════════
+document.getElementById("expandAll").addEventListener("click", () => {
+  document.querySelectorAll(".section").forEach(s => s.classList.add("sec-open"));
+  document.querySelectorAll(".group-card").forEach(gc => {
+    if(gc.style.display !== "none"){
+      gc.classList.add("open");
+      const b = gc.querySelector(".group-head");
+      if(b) b.setAttribute("aria-expanded","true");
+    }
+  });
+});
+document.getElementById("collapseAll").addEventListener("click", () => {
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("sec-open"));
+  document.querySelectorAll(".group-card").forEach(gc => {
+    gc.classList.remove("open");
+    const b = gc.querySelector(".group-head");
+    if(b) b.setAttribute("aria-expanded","false");
+  });
+});
+
+// ══════════════════════════════════════════
+// RESET
+// ══════════════════════════════════════════
+document.getElementById("resetBtn").addEventListener("click", () => {
+  if(!confirm("Reset all checked items? This cannot be undone.")) return;
+  checked = {};
+  try { localStorage.removeItem("ux_wcag_v1"); } catch(e){}
+  document.querySelectorAll(".item.checked").forEach(r => {
+    r.classList.remove("checked");
+    r.setAttribute("aria-checked","false");
+    const s = r.querySelector(".cb svg");
+    if(s) s.style.display = "none";
+  });
+  updateCounts();
+});
+
+// ══════════════════════════════════════════
+// STICKY HEADER
+// ══════════════════════════════════════════
+const heroEl = document.getElementById("hero");
+const stickyEl = document.getElementById("stickyHead");
+const filterEl = document.getElementById("filterBar");
+const STICKY_H = 52;
+
+const obs = new IntersectionObserver(([e]) => {
+  const show = !e.isIntersecting;
+  stickyEl.classList.toggle("visible", show);
+  filterEl.style.top = show ? STICKY_H+"px" : "0px";
+}, {threshold:0, rootMargin:"0px"});
+obs.observe(heroEl);
+
+// ══════════════════════════════════════════
+// SCROLL TOP
+// ══════════════════════════════════════════
+window.addEventListener("scroll", () => {
+  document.getElementById("scrollTop").style.display = window.scrollY > 300 ? "block" : "none";
+});
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+render();
+applyFilters();
+</script>
+</body>
+</html>
