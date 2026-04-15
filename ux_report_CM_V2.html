@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UX Evaluation Report – 6D Technologies Case Management</title>
+<style>
+  :root {
+    --primary:    #2B0E8C;
+    --primary-mid:#3D1AAD;
+    --primary-lt: #EEE9FF;
+    --accent:     #4F46E5;
+    --accent-lt:  #EEF2FF;
+    --teal:       #0A6E5F;
+    --teal-lt:    #E3F5F2;
+    --amber:      #92580A;
+    --amber-lt:   #FEF5E4;
+    --red:        #B91C1C;
+    --red-lt:     #FEF2F2;
+    --green:      #166534;
+    --green-lt:   #F0FDF4;
+    --white:      #FFFFFF;
+    --gray-50:    #F8F9FC;
+    --gray-100:   #F0F1F6;
+    --gray-200:   #DDE0EC;
+    --gray-400:   #9296AA;
+    --gray-600:   #555870;
+    --gray-800:   #252840;
+    --gray-900:   #14163A;
+    --radius-sm:  6px;
+    --radius-md:  10px;
+    --radius-lg:  14px;
+    --shadow-sm:  0 1px 3px rgba(20,22,58,.07), 0 1px 2px rgba(20,22,58,.04);
+    --shadow-md:  0 4px 14px rgba(20,22,58,.10), 0 2px 4px rgba(20,22,58,.06);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-800);
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  /* NAV */
+  .topnav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--primary);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2rem; height: 52px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.3);
+  }
+  .nav-brand { display: flex; align-items: center; gap: 10px; color: #fff; font-size: 14px; font-weight: 600; }
+  .nav-dot { width: 8px; height: 8px; border-radius: 50%; background: #A78BFA; }
+  .nav-links { display: flex; gap: 4px; }
+  .nav-links a {
+    color: rgba(255,255,255,.6); font-size: 12px; text-decoration: none;
+    padding: 5px 10px; border-radius: var(--radius-sm);
+    transition: background .15s, color .15s;
+  }
+  .nav-links a:hover { background: rgba(255,255,255,.12); color: #fff; }
+
+  /* LAYOUT */
+  .page { max-width: 980px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+
+  /* COVER */
+  .cover {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-mid) 55%, #5B21B6 100%);
+    border-radius: var(--radius-lg);
+    padding: 3rem 3rem 2.5rem;
+    color: #fff;
+    margin-bottom: 2.5rem;
+    position: relative; overflow: hidden;
+  }
+  .cover::before {
+    content: ''; position: absolute; top: -70px; right: -70px;
+    width: 320px; height: 320px; border-radius: 50%;
+    background: rgba(255,255,255,.04);
+  }
+  .cover::after {
+    content: ''; position: absolute; bottom: -50px; right: 100px;
+    width: 200px; height: 200px; border-radius: 50%;
+    background: rgba(255,255,255,.03);
+  }
+  .cover-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .1em; color: rgba(255,255,255,.5); text-transform: uppercase; margin-bottom: .6rem; }
+  .cover-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; }
+  .cover-logo-box { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); border-radius: var(--radius-sm); padding: 4px 12px; font-size: 13px; font-weight: 700; color: #fff; }
+  .cover-title { font-size: 27px; font-weight: 700; line-height: 1.2; margin-bottom: .4rem; }
+  .cover-sub { font-size: 15px; color: rgba(255,255,255,.68); margin-bottom: 2rem; }
+  .cover-meta { display: flex; flex-wrap: wrap; gap: 10px; }
+  .cover-pill { font-size: 12px; color: rgba(255,255,255,.75); background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15); border-radius: 20px; padding: 4px 12px; }
+
+  /* SCORE BANNER */
+  .score-banner { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 14px; margin-bottom: 2.5rem; }
+  .scard { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; box-shadow: var(--shadow-sm); }
+  .scard-label { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--gray-400); margin-bottom: .5rem; }
+  .scard-value { font-size: 32px; font-weight: 700; line-height: 1; color: var(--gray-900); }
+  .scard-value span { font-size: 16px; font-weight: 400; color: var(--gray-400); }
+  .scard-sub { font-size: 12px; color: var(--gray-400); margin-top: .3rem; }
+  .scard.primary { background: var(--primary); border-color: var(--primary); }
+  .scard.primary .scard-label { color: rgba(255,255,255,.5); }
+  .scard.primary .scard-value { color: #fff; }
+  .scard.primary .scard-sub { color: rgba(255,255,255,.45); }
+  .scard.green .scard-value { color: var(--green); }
+  .scard.red .scard-value { color: var(--red); }
+  .scard.amber .scard-value { color: var(--amber); }
+
+  /* DELTA BADGE */
+  .delta-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; background: var(--green-lt); color: var(--green); border-radius: 20px; padding: 3px 10px; margin-top: .4rem; }
+
+  /* SECTION */
+  .section { margin-bottom: 2.5rem; }
+  .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; padding-bottom: .75rem; border-bottom: 2px solid var(--primary); }
+  .section-num { width: 26px; height: 26px; border-radius: 50%; background: var(--primary); color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .section-title { font-size: 17px; font-weight: 700; color: var(--primary); }
+
+  /* EXEC */
+  .exec-card { background: var(--white); border: 1px solid var(--gray-200); border-left: 4px solid var(--primary); border-radius: 0 var(--radius-md) var(--radius-md) 0; padding: 1.5rem 1.75rem; box-shadow: var(--shadow-sm); }
+  .exec-card p { color: var(--gray-800); line-height: 1.75; margin-bottom: .75rem; }
+  .exec-card p:last-child { margin-bottom: 0; }
+
+  /* COMPARE TABLE */
+  .compare-table { width: 100%; border-collapse: collapse; background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); margin-bottom: .5rem; }
+  .compare-table thead tr { background: var(--primary); }
+  .compare-table thead th { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: rgba(255,255,255,.75); padding: .75rem 1rem; text-align: left; }
+  .compare-table tbody tr { border-bottom: 1px solid var(--gray-100); }
+  .compare-table tbody tr:last-child { border-bottom: none; }
+  .compare-table tbody tr:hover { background: var(--gray-50); }
+  .compare-table td { padding: .75rem 1rem; font-size: 13px; color: var(--gray-800); vertical-align: middle; }
+  .compare-table td:first-child { font-weight: 600; color: var(--gray-600); }
+  .tag-old { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; background: var(--gray-100); color: var(--gray-600); }
+  .tag-new { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; background: var(--green-lt); color: var(--green); }
+  .tag-partial { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; background: var(--amber-lt); color: var(--amber); }
+
+  /* IMPROVEMENTS GRID */
+  .imp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .imp-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 1.1rem 1.25rem; box-shadow: var(--shadow-sm); position: relative; overflow: hidden; }
+  .imp-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--teal); }
+  .imp-badge { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; padding: 2px 8px; border-radius: 20px; margin-bottom: .55rem; background: var(--teal-lt); color: var(--teal); }
+  .imp-title { font-size: 13px; font-weight: 700; color: var(--gray-900); margin-bottom: .35rem; }
+  .imp-body { font-size: 12px; color: var(--gray-600); line-height: 1.6; }
+
+  /* GAPS */
+  .gap-list { display: flex; flex-direction: column; gap: 10px; }
+  .gap-item { display: flex; gap: 14px; align-items: flex-start; background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-md); padding: .9rem 1.1rem; box-shadow: var(--shadow-sm); }
+  .gap-icon { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 12px; font-weight: 700; }
+  .gap-icon.c { background: var(--red-lt); color: var(--red); }
+  .gap-icon.m { background: var(--amber-lt); color: var(--amber); }
+  .gap-title { font-size: 13px; font-weight: 700; color: var(--gray-900); margin-bottom: .18rem; }
+  .gap-desc { font-size: 12px; color: var(--gray-600); line-height: 1.6; }
+  .sev { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; padding: 2px 7px; border-radius: 20px; margin-left: 6px; }
+  .sev.c { background: var(--red-lt); color: var(--red); }
+  .sev.m { background: var(--amber-lt); color: var(--amber); }
+
+  /* PRINCIPLES */
+  .prin-wrapper { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); }
+  .prin-table { width: 100%; border-collapse: collapse; }
+  .prin-table thead tr { background: var(--primary); }
+  .prin-table thead th { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: rgba(255,255,255,.72); padding: .75rem 1rem; text-align: left; }
+  .prin-table thead th:last-child { text-align: center; width: 80px; }
+  .prin-table tbody tr { border-bottom: 1px solid var(--gray-100); cursor: pointer; transition: background .12s; }
+  .prin-table tbody tr:hover { background: var(--gray-50); }
+  .prin-table tbody tr.exp-row { background: var(--accent-lt); }
+  .prin-table td { padding: .85rem 1rem; font-size: 14px; color: var(--gray-800); vertical-align: middle; }
+  .prin-table td:first-child { font-size: 12px; color: var(--gray-400); font-weight: 600; width: 40px; }
+  .detail-row td { padding: 0; background: #F5F3FF; border-bottom: 2px solid var(--accent); }
+  .detail-inner { padding: 1rem 1.25rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+  .dcol-title { font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; margin-bottom: .45rem; }
+  .dcol-title.pos { color: var(--green); }
+  .dcol-title.neg { color: var(--red); }
+  .dcol ul { padding-left: 1.1rem; }
+  .dcol li { font-size: 12px; color: var(--gray-700, #3c4558); line-height: 1.65; margin-bottom: .25rem; }
+  .spill { display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; width: 54px; padding: 4px 0; border-radius: 20px; }
+  .sp-h { background: var(--green-lt); color: var(--green); }
+  .sp-m { background: var(--amber-lt); color: var(--amber); }
+  .sp-l { background: var(--red-lt); color: var(--red); }
+  .bar-w { width: 100px; height: 5px; background: var(--gray-200); border-radius: 3px; display: inline-block; margin-right: 8px; vertical-align: middle; }
+  .bar-f { height: 5px; border-radius: 3px; }
+  .chev { font-size: 11px; color: var(--gray-400); transition: transform .2s; display: inline-block; }
+  .exp-row .chev { transform: rotate(180deg); }
+
+  /* RECOMMENDATIONS */
+  .rec-section { margin-bottom: 1.5rem; }
+  .rec-tier-badge { font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; display: inline-block; margin-bottom: .7rem; }
+  .rtb-r { background: var(--red-lt); color: var(--red); }
+  .rtb-a { background: var(--amber-lt); color: var(--amber); }
+  .rtb-b { background: var(--accent-lt); color: var(--accent); }
+  .rec-list { display: flex; flex-direction: column; gap: 8px; }
+  .rec-item { display: flex; gap: 12px; align-items: flex-start; background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-md); padding: .8rem 1rem; box-shadow: var(--shadow-sm); font-size: 13px; color: var(--gray-800); line-height: 1.6; }
+  .rn { min-width: 22px; height: 22px; border-radius: 50%; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .rn-r { background: var(--red-lt); color: var(--red); }
+  .rn-a { background: var(--amber-lt); color: var(--amber); }
+  .rn-b { background: var(--accent-lt); color: var(--accent); }
+
+  /* CONCLUSION */
+  .conclusion-card { background: var(--primary); border-radius: var(--radius-lg); padding: 2rem 2.25rem; color: #fff; box-shadow: var(--shadow-md); }
+  .conclusion-card h3 { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 1rem; }
+  .conclusion-card p { font-size: 14px; color: rgba(255,255,255,.75); line-height: 1.75; margin-bottom: .85rem; }
+  .conclusion-card p:last-of-type { margin-bottom: 1.25rem; }
+  .conclusion-card strong { color: #fff; font-weight: 600; }
+  .ns-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .ns-item { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.13); border-radius: var(--radius-md); padding: .85rem 1rem; font-size: 13px; color: rgba(255,255,255,.78); line-height: 1.6; }
+  .ns-item strong { color: #fff; display: block; margin-bottom: .2rem; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; }
+
+  /* FOOTER */
+  .footer { background: var(--primary); color: rgba(255,255,255,.4); text-align: center; font-size: 12px; padding: 1.25rem 2rem; }
+
+  @media(max-width:680px) {
+    .score-banner { grid-template-columns: 1fr 1fr; }
+    .imp-grid, .detail-inner, .ns-grid { grid-template-columns: 1fr; }
+    .cover { padding: 2rem 1.5rem; }
+    .cover-title { font-size: 22px; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="topnav">
+  <div class="nav-brand"><div class="nav-dot"></div>UX Evaluation Report — 6D Technologies</div>
+  <div class="nav-links">
+    <a href="#summary">Summary</a>
+    <a href="#compare">Score</a>
+    <a href="#improvements">Improvements</a>
+    <a href="#gaps">Gaps</a>
+    <a href="#principles">Principles</a>
+    <a href="#recs">Recommendations</a>
+    <a href="#conclusion">Conclusion</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- COVER -->
+  <div class="cover">
+    <div class="cover-eyebrow">Formal UX Re-Validation · Stakeholder Report</div>
+    <div class="cover-logo">
+      <div class="cover-logo-box">6D Technologies</div>
+    </div>
+    <div class="cover-title">Case Management Platform<br>UX Re-Validation Report</div>
+    <div class="cover-sub">Case Investigation &amp; Case Transfer Flow — Updated Design Assessment</div>
+    <div class="cover-meta">
+      <span class="cover-pill">19 Screens Reviewed</span>
+      <span class="cover-pill">April 1, 2026</span>
+      <span class="cover-pill">Senior Enterprise UX Consultant</span>
+      <span class="cover-pill">Baseline Score: 7.1 / 10</span>
+      <span class="cover-pill">Distribution: Leadership · Product · Design</span>
+    </div>
+  </div>
+
+  <!-- SCORE BANNER -->
+  <div class="score-banner">
+    <div class="scard primary">
+      <div class="scard-label">Updated UX Score</div>
+      <div class="scard-value">8.2<span>/10</span></div>
+      <div class="delta-badge">▲ +1.1 from baseline</div>
+    </div>
+    <div class="scard green">
+      <div class="scard-label">Principles Evaluated</div>
+      <div class="scard-value">10</div>
+      <div class="scard-sub">Full flow coverage</div>
+    </div>
+    <div class="scard amber">
+      <div class="scard-label">Screens Reviewed</div>
+      <div class="scard-value">19</div>
+      <div class="scard-sub">Dashboard → Transfer</div>
+    </div>
+    <div class="scard red">
+      <div class="scard-label">Immediate Gaps</div>
+      <div class="scard-value">5</div>
+      <div class="scard-sub">Pre-launch priority</div>
+    </div>
+  </div>
+
+  <!-- EXECUTIVE SUMMARY -->
+  <div class="section" id="summary">
+    <div class="section-header"><div class="section-num">1</div><div class="section-title">Executive Summary</div></div>
+    <div class="exec-card">
+      <p>The updated 6D Technologies Case Management flow represents a <strong>meaningful and well-structured iteration</strong> over the baseline. The design team has addressed several core usability concerns from the prior review — most notably the AI Investigation lifecycle clarity, the Transfer Case modal's information completeness, and the introduction of a Knowledge Base Playbook with step-level completion tracking. The overall UX quality has improved from <strong>7.1 to 8.2 out of 10</strong>, a gain of +1.1 points.</p>
+      <p>Standout improvements include the <strong>AI Investigation complete state</strong> with a visible confidence score (94%) and clearly structured root cause findings, the <strong>live call integration</strong> with AI Live Notes auto-capture, the <strong>CRM 360° enterprise intelligence layer</strong> with full customer profiling, and the <strong>Knowledge Base Playbook</strong> with a "Mark Complete" interaction per step. The Transfer Case modal now surfaces team availability, SLA impact, customer notification options, and system action declarations — removing the opacity that was the primary concern in the baseline review.</p>
+      <p>The platform is approaching <strong>production-ready enterprise quality</strong>. Remaining gaps are focused in three areas: accessibility compliance, a missing Resolve Case confirmation guardrail, and label/heading copy inconsistencies (notably "Issue Summery" — a persistent misspelling across screens). Addressing these will position the platform as a benchmark enterprise case management experience.</p>
+    </div>
+  </div>
+
+  <!-- SCORE COMPARISON -->
+  <div class="section" id="compare">
+    <div class="section-header"><div class="section-num">2</div><div class="section-title">Score Comparison — Baseline vs. Updated</div></div>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>UX Principle</th>
+          <th>Baseline Score</th>
+          <th>Updated Score</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="compare-tbody"></tbody>
+    </table>
+  </div>
+
+  <!-- KEY IMPROVEMENTS -->
+  <div class="section" id="improvements">
+    <div class="section-header"><div class="section-num">3</div><div class="section-title">Key Improvements Observed</div></div>
+    <div class="imp-grid">
+      <div class="imp-card">
+        <div class="imp-badge">Resolved</div>
+        <div class="imp-title">AI Investigation — full lifecycle visible</div>
+        <div class="imp-body">The flow now progresses cleanly from locked → in-progress (with step counter "1 of 6 completed") → complete with confidence score (94%), root cause identification, key findings, and recommended actions. The prior "AI black box" concern is resolved.</div>
+      </div>
+      <div class="imp-card">
+        <div class="imp-badge">Resolved</div>
+        <div class="imp-title">Transfer Case modal — complete decision surface</div>
+        <div class="imp-body">The modal now surfaces case ID, customer, root cause, activities done, team selection with live agent counts, AI-generated customer notification content, SLA/priority changes, and system action declarations — all before the confirm action.</div>
+      </div>
+      <div class="imp-card">
+        <div class="imp-badge">New &amp; well-executed</div>
+        <div class="imp-title">Knowledge Base Playbook with "Mark Complete"</div>
+        <div class="imp-body">Step-level completion tracking is now present in the Playbook panel. Each step has a "Mark Complete" CTA with verified checklist items shown in strikethrough, resolving the prior gap around playbook adherence visibility during live calls.</div>
+      </div>
+      <div class="imp-card">
+        <div class="imp-badge">New &amp; well-executed</div>
+        <div class="imp-title">Live Call with AI Live Notes auto-capture</div>
+        <div class="imp-body">The live call panel with AI Live Notes in the right rail simultaneously captures conversation context while the agent handles the call — reducing manual note-taking as a parallel cognitive task entirely.</div>
+      </div>
+      <div class="imp-card">
+        <div class="imp-badge">Significantly improved</div>
+        <div class="imp-title">CRM 360° — enterprise-grade customer intelligence</div>
+        <div class="imp-body">The CRM 360° tab now delivers a full-profile view including company details, accounts, SIMs, plan usage (voice, data, SMS), add-ons, open tickets, orders, and contact/address data — far exceeding the baseline's minimal customer context.</div>
+      </div>
+      <div class="imp-card">
+        <div class="imp-badge">Improved</div>
+        <div class="imp-title">Case Timeline — audit-ready communication log</div>
+        <div class="imp-body">The Case History &amp; Communication Log now includes filterable event types (Agent Actions, AI Events, System Events, Calls) with a clear visual timeline and "Currently Working" active state — supporting compliance and QA review workflows.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAPS -->
+  <div class="section" id="gaps">
+    <div class="section-header"><div class="section-num">4</div><div class="section-title">Remaining UX Gaps</div></div>
+    <div class="gap-list">
+      <div class="gap-item">
+        <div class="gap-icon c">!</div>
+        <div>
+          <div class="gap-title">"Issue Summery" heading typo — present across all case screens <span class="sev c">Critical</span></div>
+          <div class="gap-desc">The label "Issue Summery" appears consistently across every case detail screen (pages 3–12, 18). This is a misspelling of "Summary" and is visible to agents and customers alike. In a product presented to enterprise clients, this is a trust and quality signal failure that must be corrected before any external demonstration.</div>
+        </div>
+      </div>
+      <div class="gap-item">
+        <div class="gap-icon c">!</div>
+        <div>
+          <div class="gap-title">No Resolve Case confirmation dialog <span class="sev c">Critical</span></div>
+          <div class="gap-desc">The "Resolve" button is a primary CTA present on every case detail screen. Case resolution is irreversible and triggers downstream events — SLA logging, customer notification, case closure. No confirmation step or undo affordance is visible. This is a high-risk gap for enterprise compliance workflows.</div>
+        </div>
+      </div>
+      <div class="gap-item">
+        <div class="gap-icon c">!</div>
+        <div>
+          <div class="gap-title">AI Investigation finding language remains probabilistic <span class="sev c">Critical</span></div>
+          <div class="gap-desc">Despite the 94% confidence score, the AI recommended actions do not include a direct escalation CTA. Agents must manually interpret the recommended actions and initiate the transfer independently. For a confirmed system error, this should surface a single deterministic "Escalate to Technical Support" action button.</div>
+        </div>
+      </div>
+      <div class="gap-item">
+        <div class="gap-icon m">~</div>
+        <div>
+          <div class="gap-title">Duplicate contact data in CRM 360° Profile Info <span class="sev m">Moderate</span></div>
+          <div class="gap-desc">Contact 1 and Contact 2 show identical name, email, and phone (Robert Robertson / Davidjo9086@gmail.com / 890867890). Similarly, Current Address 1 and Address 2 are identical. This appears to be placeholder or incorrect data — a trust and data quality concern for enterprise demos and real deployments.</div>
+        </div>
+      </div>
+      <div class="gap-item">
+        <div class="gap-icon m">~</div>
+        <div>
+          <div class="gap-title">Accessibility gaps — WCAG 2.1 AA compliance risk <span class="sev m">Moderate</span></div>
+          <div class="gap-desc">No visible keyboard focus indicators across interactive elements. The right-panel icon rail has no text labels or tooltips. Live call controls (mute, hold, end) rely on icon recognition with no accessible text labels. These are WCAG 2.1 AA violations and represent a compliance risk for regulated enterprise clients.</div>
+        </div>
+      </div>
+      <div class="gap-item">
+        <div class="gap-icon m">~</div>
+        <div>
+          <div class="gap-title">Transfer modal — "Reason for Transfer" field absent <span class="sev m">Moderate</span></div>
+          <div class="gap-desc">Unlike the reference flow reviewed previously, the 6D transfer modal does not include a free-text reason for transfer field. For compliance and audit purposes, agents should document the context for escalation. This field, with minimum input guidance, strengthens audit traceability.</div>
+        </div>
+      </div>
+      <div class="gap-item">
+        <div class="gap-icon m">~</div>
+        <div>
+          <div class="gap-title">Network Status panel lacks explicit case relevance link <span class="sev m">Moderate</span></div>
+          <div class="gap-desc">The Network Status panel surfaces 5 nodes (Mumbai West Tower, Mumbai Central Hub, Navi Mumbai Corridor, Thane Relay Station, Pune Gateway) with health indicators. However, there is no explicit label or visual callout indicating which node is directly associated with this customer's location or the reported roaming event.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRINCIPLES -->
+  <div class="section" id="principles">
+    <div class="section-header"><div class="section-num">5</div><div class="section-title">Detailed Evaluation by Principle <span style="font-size:13px;font-weight:400;color:var(--gray-400);margin-left:6px">— click any row to expand</span></div></div>
+    <div class="prin-wrapper">
+      <table class="prin-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Principle</th>
+            <th>Score bar</th>
+            <th>Rating</th>
+            <th style="width:30px"></th>
+          </tr>
+        </thead>
+        <tbody id="ptbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- RECOMMENDATIONS -->
+  <div class="section" id="recs">
+    <div class="section-header"><div class="section-num">6</div><div class="section-title">Recommendations</div></div>
+    <div class="rec-section">
+      <div class="rec-tier-badge rtb-r">Immediate — Pre-Launch</div>
+      <div class="rec-list">
+        <div class="rec-item"><div class="rn rn-r">1</div>Fix "Issue Summery" to "Issue Summary" across all case detail screens. This is a zero-effort, high-trust-impact correction.</div>
+        <div class="rec-item"><div class="rn rn-r">2</div>Add a Resolve Case confirmation dialog with a brief summary of actions taken and a confirmation CTA. Resolution is irreversible — a guardrail is mandatory.</div>
+        <div class="rec-item"><div class="rn rn-r">3</div>Replace probabilistic AI action language with a deterministic escalation CTA when the confidence score exceeds a defined threshold (e.g., 90%+).</div>
+        <div class="rec-item"><div class="rn rn-r">4</div>Correct duplicate Contact and Address data in the CRM 360° Profile Info screen before any enterprise demonstration or live deployment.</div>
+        <div class="rec-item"><div class="rn rn-r">5</div>Add a "Reason for Transfer" free-text field to the Transfer Case modal with minimum input guidance to support audit and compliance traceability.</div>
+      </div>
+    </div>
+    <div class="rec-section">
+      <div class="rec-tier-badge rtb-a">Next Sprint — Nice to Have</div>
+      <div class="rec-list">
+        <div class="rec-item"><div class="rn rn-a">6</div>Add keyboard focus indicators and ARIA labels across all interactive elements — right-panel icon rail, live call controls, and form inputs as a priority.</div>
+        <div class="rec-item"><div class="rn rn-a">7</div>Contextually highlight the network node relevant to this customer's registered location in the Network Status panel with a "Customer's area" tag.</div>
+        <div class="rec-item"><div class="rn rn-a">8</div>Add an inline "Apply Credit" action widget within the AI Recommended Actions panel to prevent agents from exiting the investigation view to execute it manually.</div>
+        <div class="rec-item"><div class="rn rn-a">9</div>Add an overall Playbook completion progress indicator (e.g., "2/4 steps complete") above the step list to give agents a quick orientation before scrolling through steps.</div>
+        <div class="rec-item"><div class="rn rn-a">10</div>Standardise the "Attention!" note label across the Notes section — consider using a more semantically structured tag system (e.g., "Manager Note," "System Note," "Agent Note") for audit clarity.</div>
+      </div>
+    </div>
+    <div class="rec-section">
+      <div class="rec-tier-badge rtb-b">Strategic — Future Maturity</div>
+      <div class="rec-list">
+        <div class="rec-item"><div class="rn rn-b">11</div>Introduce agent performance analytics (SLA adherence, first-call resolution rate, CSAT trend) accessible to team leads from the dashboard.</div>
+        <div class="rec-item"><div class="rn rn-b">12</div>Add an AI recommendation feedback loop — agents rate investigation findings as accurate or inaccurate to improve AARYA's investigation quality over time.</div>
+        <div class="rec-item"><div class="rn rn-b">13</div>Commission a formal WCAG 2.1 AA compliance audit with assistive technology testing before rollout to regulated enterprise verticals (BFSI, government, healthcare).</div>
+        <div class="rec-item"><div class="rn rn-b">14</div>Introduce predictive SLA breach alerts — surface a risk score based on case complexity and current agent queue load, not only elapsed SLA time.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONCLUSION -->
+  <div class="section" id="conclusion">
+    <div class="section-header"><div class="section-num">7</div><div class="section-title">Final Conclusion</div></div>
+    <div class="conclusion-card">
+      <h3>Assessment verdict — 8.2 / 10</h3>
+      <p>The 6D Technologies Case Management platform has matured meaningfully from the 7.1 baseline. The AI Investigation lifecycle, Live Call with AI Notes, Knowledge Base Playbook, CRM 360° intelligence layer, and the improved Transfer Case modal together constitute a <strong>coherent, high-efficiency enterprise workflow</strong> that is substantively better than its prior iteration.</p>
+      <p>The platform is <strong>production-ready with known gaps</strong>. Three of those gaps — the heading typo, the missing Resolve confirmation, and the absence of a transfer reason field — are low-effort, high-impact fixes that should be closed before any enterprise client demonstration. Accessibility is the one structural investment required for regulated-industry readiness.</p>
+      <p>With these four actions resolved, this platform is positioned as a <strong>reference-quality, AI-augmented enterprise case management experience.</strong></p>
+      <div class="ns-grid">
+        <div class="ns-item"><strong>Fix 1 — Copy Quality</strong>Correct "Issue Summery" → "Issue Summary" across all screens immediately.</div>
+        <div class="ns-item"><strong>Fix 2 — Error Prevention</strong>Add Resolve Case confirmation dialog before any production release.</div>
+        <div class="ns-item"><strong>Fix 3 — Audit Compliance</strong>Add Reason for Transfer field and clean duplicate CRM 360° profile data.</div>
+        <div class="ns-item"><strong>Fix 4 — Accessibility</strong>Deliver keyboard navigation and ARIA labelling pass for WCAG 2.1 AA compliance.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  UX Evaluation Report · 6D Technologies Case Management Platform · April 2026 · Senior Enterprise UX Consultant · Confidential — Leadership Distribution Only
+</div>
+
+<script>
+const compare = [
+  { p: "Clarity and ease of understanding", old: 7.0, nw: 8.5 },
+  { p: "Information architecture",          old: 7.2, nw: 8.5 },
+  { p: "Interaction design",                old: 6.8, nw: 8.0 },
+  { p: "Form usability",                    old: 6.5, nw: 7.5 },
+  { p: "Cognitive load",                    old: 7.0, nw: 8.0 },
+  { p: "Consistency",                       old: 6.8, nw: 7.2 },
+  { p: "Error prevention and validation",   old: 6.5, nw: 6.8 },
+  { p: "Accessibility considerations",      old: 6.0, nw: 6.5 },
+  { p: "Efficiency of flow",                old: 7.5, nw: 8.8 },
+  { p: "Enterprise readiness",              old: 7.5, nw: 8.8 },
+];
+const tbody = document.getElementById('compare-tbody');
+compare.forEach(r => {
+  const delta = (r.nw - r.old).toFixed(1);
+  const improved = r.nw > r.old;
+  const same = r.nw === r.old;
+  const statusTag = improved
+    ? `<span class="tag-new">▲ +${delta}</span>`
+    : same
+    ? `<span class="tag-partial">= No change</span>`
+    : `<span class="tag-old">▼ ${delta}</span>`;
+  tbody.innerHTML += `<tr>
+    <td>${r.p}</td>
+    <td><span class="tag-old">${r.old}/10</span></td>
+    <td><span class="tag-new">${r.nw}/10</span></td>
+    <td>${statusTag}</td>
+  </tr>`;
+});
+
+const principles = [
+  { name: "Clarity and ease of understanding", score: 8.5,
+    working: ["AI Investigation complete state shows root cause, confidence score (94%), key finding with 'High Confidence' badge, and recommended actions in a logical hierarchy","Issue Description surfaces the exact disputed amount (₹850) in highlighted text — precise and agent-friendly","AI Live Notes during the call capture timestamped conversation context automatically","Call Summary generation state ('Generating the Call Summary') is clearly communicated with status feedback"],
+    improve: ["'Issue Summery' heading typo appears on every case detail screen — a significant copy quality failure","The AI recommended actions list includes two identical bullet points ('Flag account to disable auto-roaming activation') — suggesting a data rendering error","Confidence score bar is present but not contextually explained — agents may not know what 94% means in terms of action authority"] },
+  { name: "Information architecture", score: 8.5,
+    working: ["Three-tab structure (Overview / Case Timeline / CRM 360°) cleanly separates three agent cognitive modes","CRM 360° left-nav (Manage Profile / Manage Account / Manage Service / History) is logically grouped and enterprise-standard","Right icon rail (bot, chat, team, attachments, documents, playbook, network) is consistently placed across all case screens","'Customer 360' sub-navigation within CRM 360° (Profile Info, Address, Contact, ID & Documents, etc.) provides comprehensive, well-structured customer intelligence"],
+    improve: ["The right icon rail icons have no visible labels or tooltips — agents new to the platform cannot discover functionality without trial and error","Network Status panel appears in the right rail without a clear label connecting it to the current case's geographical context","The CRM 360° company view (Tech Crop Solutions) and the individual customer view (Joseph Kurian) coexist without clear visual separation of corporate vs. individual account hierarchy"] },
+  { name: "Interaction design", score: 8.0,
+    working: ["'Start AI Investigation' CTA is visually prominent and gated behind case acceptance — a correct interaction dependency","Live call controls (Record, Mute, Hold, End Call with red) are logically grouped with appropriate visual weight","The Knowledge Base Playbook 'Mark Complete' CTA per step is a well-executed, actionable interaction","Transfer modal team selection uses card-based radio pattern with 'X online' availability indicators — above-average enterprise pattern"],
+    improve: ["'Hold' and 'Resolve' button styling is visually similar in the action bar despite having opposite outcomes — 'Hold' should be visually deprioritised","No confirmation step for 'Resolve Case' — an irreversible, high-consequence action lacks a required guardrail","The 'Generate' link for AI content in the Transfer notification section has insufficient visual affordance — it reads as plain text, not an interactive control"] },
+  { name: "Form usability", score: 7.5,
+    working: ["Transfer modal customer notification section now includes both a predefined template dropdown and an AI content generation field — two usable pathways","The free-text message area in the Transfer modal allows agents to customise the customer-facing notification","Notes panel 'Save Note' CTA is clearly positioned and visually distinct"],
+    improve: ["'Reason for Transfer' text field is absent from the 6D transfer modal — a compliance and audit gap","No character counter, placeholder text, or example input in the notification text area — agents have no guidance on expected content quality or length","'Save Note' does not communicate auto-save behaviour — agents navigating away may be unsure their notes are preserved"] },
+  { name: "Cognitive load", score: 8.0,
+    working: ["AI Investigation offloads root cause analysis across 6 data sources — the most significant cognitive load reduction in the entire flow","AI Live Notes eliminate manual note-taking during live calls entirely","The Playbook provides step-by-step procedural scaffolding so agents do not need to hold process steps in working memory","The CRM 360° company overview (tickets, orders, plan usage, add-ons) consolidates all account intelligence in a single panel"],
+    improve: ["The CRM 360° profile page (pages 14–15) is very dense — 15+ data fields in the Basic Info section without visual grouping or priority hierarchy","The right panel can surface multiple simultaneous modules (AI Live Notes, Network Status, Teams, Notes, Playbook) without a clear priority or switching mechanism visible to the agent","The dashboard case list shows 500 cases with all identical subjects and SLA data — this appears to be test data but would represent extreme cognitive overload in production without better filtering defaults"] },
+  { name: "Consistency", score: 7.2,
+    working: ["Primary CTA button colours (purple for Transfer, amber for Hold, blue for Resolve/Accept) are applied consistently across all case detail screens","Status colours in the case table (Urgent/red, High/orange, Medium/blue, In Progress/blue, Waiting/orange, blocked/red) are consistent","AI Investigation banner styling (beige/tan background) is consistent across its lifecycle states"],
+    improve: ["'Issue Summery' typo is consistent — consistently wrong across all screens","The customer header bar shows a crown emoji (👑) but no tooltip or legend explains what it signifies — inconsistent with enterprise-standard tier indicators","Case table shows all rows as 'CS-3841' with identical subjects — suggests inconsistent or incomplete test data that would confuse stakeholder reviews"] },
+  { name: "Error prevention and validation", score: 6.8,
+    working: ["The 'Accept' gate before AI Investigation is an effective safeguard against agents investigating unassigned cases","SLA and priority change preview in the Transfer modal gives agents a clear view of downstream consequences before confirming","The 'Attention!' note in the Notes section provides a visible agent warning for high-value customer handling"],
+    improve: ["No Resolve Case confirmation dialog — the most critical missing safeguard in the entire flow","Transfer modal 'Confirm Transfer' CTA has no visible validation for the notification content field — agents can transfer with an empty customer message","No visible duplicate case detection or related case alert beyond the Notes section — a deduplication gap for complex billing scenarios"] },
+  { name: "Accessibility considerations", score: 6.5,
+    working: ["Priority colour labels (Urgent, High, Medium, Low) are supplemented by text — not colour-only","AI Investigation progress states use both icon and text label per step — appropriate for colour-blind accessibility","High-contrast primary CTAs (purple, amber, blue) meet basic contrast requirements at first glance"],
+    improve: ["No keyboard focus indicators visible on any interactive element across any screen — a WCAG 2.1 AA violation","Right icon rail has no text labels, tooltips, or ARIA labels — entirely inaccessible to screen readers","Live call controls (mute, hold, end) use icon-only display with no accessible text labels","The crown emoji in the customer header has no alt text or ARIA label equivalent"] },
+  { name: "Efficiency of flow", score: 8.8,
+    working: ["The full flow — case acceptance → AI investigation → live call → team chat → CRM 360° review → transfer — is completable without leaving the case detail view","One-click 'Call Now' and 'Send Email' CTAs in the case header reduce channel-switching friction significantly","AI pre-populated transfer modal eliminates all manual case summary and root cause data entry","The dashboard 'Action Now' and 'Follow Ups' panels surface the highest-priority actions at a glance — reducing triage time","AARYA AI assistant chatbot with quick actions ('Summarize this Case', 'Attach AI evidences') reduces navigation steps for common tasks"],
+    improve: ["The AI recommended goodwill credit (₹50) has no inline 'Apply' action — agents must exit the investigation panel to execute it","The Playbook panel requires scrolling to see completion status for later steps — an overall progress indicator above the step list would save time during live calls"] },
+  { name: "Enterprise readiness", score: 8.8,
+    working: ["CRM 360° company view includes enterprise-critical fields: Enterprise ID, accounts count, SIM count, plan usage breakdown (voice/data/SMS), add-ons, billing cycle, and open ticket/order status","Case Timeline provides a filterable audit log (Agent Actions / AI Events / System Events / Calls) with a 'Currently Working' active state — compliance-ready","AI evidence documents are tagged with source type (Customer Submitter / AI Evidence) for audit traceability","Team collaboration chat (page 16) is embedded within the case context with full thread history — supports cross-team escalation without platform switching","AARYA AI assistant operates as a contextual copilot with case-specific quick actions — a differentiating enterprise intelligence layer"],
+    improve: ["No visible role-based access control signals — agents cannot tell which actions are role-restricted (e.g., is 'Resolve' available to all agents or only senior agents?)","CRM 360° profile contains duplicate contact and address data — a data quality failure that would undermine enterprise trust in a live demonstration","No bulk case action capability visible in the case list — relevant for team leads managing queues at volume"] }
+];
+
+function sc(s) { return s >= 8.5 ? 'sp-h' : s >= 7 ? 'sp-m' : 'sp-l'; }
+function bc(s) { return s >= 8.5 ? '#166534' : s >= 7 ? '#92580A' : '#B91C1C'; }
+
+const ptbody = document.getElementById('ptbody');
+principles.forEach((p, i) => {
+  const pct = ((p.score / 10) * 100).toFixed(0);
+  const tr = document.createElement('tr');
+  tr.id = 'r' + i;
+  tr.innerHTML = `
+    <td>${String(i+1).padStart(2,'0')}</td>
+    <td style="font-weight:500">${p.name}</td>
+    <td><span class="bar-w"><span class="bar-f" style="width:${pct}%;background:${bc(p.score)}"></span></span><span style="font-size:13px;color:var(--gray-600)">${p.score}</span></td>
+    <td style="text-align:center"><span class="spill ${sc(p.score)}">${p.score}/10</span></td>
+    <td style="text-align:center"><span class="chev" id="ch${i}">▼</span></td>`;
+  tr.onclick = () => toggle(i);
+  ptbody.appendChild(tr);
+  const dr = document.createElement('tr');
+  dr.className = 'detail-row';
+  dr.id = 'd' + i;
+  dr.style.display = 'none';
+  dr.innerHTML = `<td colspan="5"><div class="detail-inner">
+    <div class="dcol"><div class="dcol-title pos">What is working well</div><ul>${p.working.map(w=>`<li>${w}</li>`).join('')}</ul></div>
+    <div class="dcol"><div class="dcol-title neg">What still needs improvement</div><ul>${p.improve.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+  </div></td>`;
+  ptbody.appendChild(dr);
+});
+
+function toggle(i) {
+  const d = document.getElementById('d'+i);
+  const r = document.getElementById('r'+i);
+  const c = document.getElementById('ch'+i);
+  const open = d.style.display !== 'none';
+  d.style.display = open ? 'none' : 'table-row';
+  r.classList.toggle('exp-row', !open);
+  c.style.transform = open ? '' : 'rotate(180deg)';
+}
+</script>
+</body>
+</html>
